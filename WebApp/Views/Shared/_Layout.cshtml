@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ChacoCooperativa</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <ul class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApp</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <ul class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Configuraciones Cliente
+                            </a>
+                            <ul class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="" asp-controller="Personas" asp-action="Index">Personas</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Generos" asp-action="Index">Generos</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Nacionalidades" asp-action="Index">Nacionalidades</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="EstadosCivil" asp-action="Index">Estados Civil</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Conyuges" asp-action="Index">Conyuges</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="OrigenesIngresoCliente" asp-action="Index">Origenes Ingreso Cliente</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="TiposActividad" asp-action="Index">Tipos Actividad</a>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Configuraciones Producto
+                            </a>
+                            <ul class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="" asp-controller="Productos" asp-action="Index">Productos</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Requisitos" asp-action="Index">Requisitos</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Beneficios" asp-action="Index">Beneficios</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Terminos" asp-action="Index">Terminos</a>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Configuraciones Solicitudes
+                            </a>
+                            <ul class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="" asp-controller="SolicitudesPrestamo" asp-action="Index">Solicitudes Prestamo</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Avales" asp-action="Index">Avales</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Documentos" asp-action="Index">Documentos</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="TiposDocumento" asp-action="Index">Tipos Documento</a>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Configuraciones Prestamos
+                            </a>
+                            <ul class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="" asp-controller="PrestamosAprobado" asp-action="Index">Prestamos Aprobado</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Cuotas" asp-action="Index">Cuotas</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Pagos" asp-action="Index">Pagos</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="FormasPago" asp-action="Index">Formas de Pago</a>
+                            </ul>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </ul>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

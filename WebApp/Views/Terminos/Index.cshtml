@@ -1,0 +1,107 @@
+﻿@model IEnumerable<WebApp.Models.Termino>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoMinimo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoMaximo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlazoMinimo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlazoMaximo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaNominal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaGastosAdministrativos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaGastosCobranza)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaSeguros)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaInteresMora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EsPrepagable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaCastigoPrepago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaCoberturaAval)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TasaCoberturaConyuge)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MontoMinimo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MontoMaximo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlazoMinimo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlazoMaximo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaNominal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaGastosAdministrativos)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaGastosCobranza)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaSeguros)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaInteresMora)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EsPrepagable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaCastigoPrepago)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaCoberturaAval)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TasaCoberturaConyuge)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
