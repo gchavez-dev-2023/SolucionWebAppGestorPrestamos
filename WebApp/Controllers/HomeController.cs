@@ -83,8 +83,8 @@ namespace WebApp.Controllers
             {
                 PagesCount = true,
                 //HtmlContent = TemplateGenerator.GetHTMLString(),
-                //HtmlContent = html,
-                Page = pagina,
+                HtmlContent = html,
+                //Page = pagina,
                 //WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
                 WebSettings = { DefaultEncoding = "utf-8" },
                 //HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
