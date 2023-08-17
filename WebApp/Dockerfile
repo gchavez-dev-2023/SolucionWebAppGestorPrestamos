@@ -1,6 +1,8 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+#Para que funcione DinkTOPDF
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils libgdiplus libc6-dev && ln -s /usr/lib/libgdiplus.so /usr/lib/gdiplus.dll
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443

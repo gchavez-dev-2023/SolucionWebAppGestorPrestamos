@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using WebApp.Helpers;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -13,10 +16,12 @@ namespace WebApp.Controllers
     public class SolicitudesPrestamoController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConverter _converter;
 
-        public SolicitudesPrestamoController(ApplicationDbContext context)
+        public SolicitudesPrestamoController(ApplicationDbContext context, IConverter converter)
         {
             _context = context;
+            _converter = converter;
         }
 
         // GET: SolicitudesPrestamo
@@ -24,6 +29,35 @@ namespace WebApp.Controllers
         {
             var applicationDbContext = _context.SolicitudesPrestamo.Include(s => s.Cliente).Include(s => s.Producto);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> MostrarPDFenPagina()
+        {
+            var applicationDbContext = _context.SolicitudesPrestamo.Include(s => s.Cliente).Include(s => s.Producto);
+            //Se transforma la vista a String HTML
+            string html = Helper.RenderRazorViewToString(this, "Index", await applicationDbContext.ToListAsync());
+
+            var globalSettings = new GlobalSettings
+            {
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+            };
+
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = html,
+            };
+
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings }
+            };
+
+            var file = _converter.Convert(pdf);
+
+            return File(file, "application/pdf");
         }
 
         // GET: SolicitudesPrestamo/Details/5

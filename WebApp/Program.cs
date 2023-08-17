@@ -1,8 +1,44 @@
+using DinkToPdf.Contracts;
+using DinkToPdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 using WebApp.Data;
+using WebApp.Extension;
+using WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Agregar DinkToPDF
+var architectureFolder = (IntPtr.Size == 8) ? "x_64" : "x_86";
+var wkHtmlToPdfFileName = "libwkhtmltox";
+if (architectureFolder == "x_64") //Solo paquetes 64 bit
+{
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) //Linux para el docker
+    {
+        wkHtmlToPdfFileName += ".so";
+    }
+    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) //Windows para el Visual Basic
+    {
+        wkHtmlToPdfFileName += ".dll";
+    }
+}
+else
+{
+    Console.WriteLine("DinktoPDF no es soportado para la versión del Sistema Operativo");
+}
+
+var wkHtmlToPdfPath = Path.Combine(
+    new string[] {
+        Directory.GetCurrentDirectory(),
+        wkHtmlToPdfFileName
+    });
+
+CustomAssemblyLoadContext context = new CustomAssemblyLoadContext();
+context.LoadUnmanagedLibrary(wkHtmlToPdfPath);
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+//Para convertir RAZOR a HTML para DINKTOPDF
+builder.Services.AddTransient<IRazorPartialToStringRenderer, RazorPartialToStringRenderer>();
 
 // Add services to the container.
 /*var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
