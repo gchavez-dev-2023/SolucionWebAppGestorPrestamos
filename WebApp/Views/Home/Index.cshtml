@@ -2,9 +2,102 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+@*<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <a class="btn btn-primary" asp-controller="Home" asp-action="MostrarPDFenPagina" target="_blank">Ver PDF en Pagina</a>
     <a class="btn btn-primary" asp-controller="Home" asp-action="DescargarPDF" >Descargar PDF</a>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>*@
+
+<div class="text-center">
+    <h1 class="display-4">Bienvenido</h1>
+    <p>Cooperativa de préstamos.</p>
+    <br>
+    <h1 class="display-4">Simulador de créditos</h1>
 </div>
+
+<div class="row d-flex d-flex align-content-between flex-wrap">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label class="control-label" for="ProductoId">Tipo Crédito</label>
+            <select class="form-control" data-val="true" data-val-required="The Tipo Crédito field is required." id="ProductoId" name="ProductoId" asp-items="ViewBag.ProductoId"></select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label" for="MontoSolicitado">Monto Solicitado</label>
+            <input class="form-control" type="text" data-val="true" data-val-number="The field Monto Solicitado must be a number." data-val-required="The Monto Solicitado field is required." id="MontoSolicitado" name="MontoSolicitado" value="0">
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label" for="CantidadCuotas">Cantidad de Cuotas</label>
+            <input class="form-control" type="number" data-val="true" data-val-required="The Cantidad de Cuotas field is required." id="CantidadCuotas" name="CantidadCuotas" value="0">
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label" for="CostoTotalFinanciero">Costo Financiero Total</label>
+            <input class="form-control" readonly="" type="text" data-val="true" data-val-number="The field Costo Financiero Total must be a number." data-val-required="The Costo Financiero Total field is required." id="CostoTotalFinanciero" name="CostoTotalFinanciero" value="">
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label" for="ValorCuota">Valor Cuota</label>
+            <input class="form-control" readonly="" type="text" data-val="true" data-val-number="The field Valor Cuota must be a number." data-val-required="The Valor Cuota field is required." id="ValorCuota" name="ValorCuota" value="">
+        </div>
+    </div>
+</div>
+<div class="text-center">
+    <br />
+    <p>La presente Simulación no implica obligación para de otorgamiento de crédito simulado. La aprobación de crédito simulado queda sujeta a la verificación de antecedentes comerciales del Cliente y al cumplimiento de las políticas de crédito vigentes a la fecha de evaluación del Crédito.</p>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //On Change
+            $('#ProductoId').change(function () {
+                calcularCuota();
+            });
+            //On Change
+            $('#MontoSolicitado').change(function () {
+                calcularCuota();
+            });
+            //On Change
+            $('#CantidadCuotas').change(function () {
+                calcularCuota();
+            });
+        });
+        //Funcion Calcular Cuota
+        function calcularCuota() {
+            var montoSolicitado = parseFloat($("#MontoSolicitado").val());
+            var cantidadCuotas = parseInt($("#CantidadCuotas").val());
+
+            $.ajax({
+                type: "POST",
+                url: "/Productos/GetCTFyValorCuota",
+                dataType: 'json',
+                data: { "productoId": $("#ProductoId").val()
+                      , "montoSolicitado": $("#MontoSolicitado").val()
+                      , "cantidadCuotas": $("#CantidadCuotas").val() 
+                },
+                success: function (response) {
+                    $("#CostoTotalFinanciero").val(response.costoTotalFinanciero);
+                    $("#ValorCuota").val(response.valorCuota);
+                },
+                failure: function (response) {
+                    alert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+    </script>
+    }
+

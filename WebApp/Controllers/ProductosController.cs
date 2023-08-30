@@ -176,5 +176,36 @@ namespace WebApp.Controllers
         {
           return (_context.Productos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
+
+        [HttpPost]
+        public JsonResult GetCTFyValorCuota(int productoId, decimal montoSolicitado, int cantidadCuotas)
+        {
+            decimal ctf = 0;
+            decimal montoCuota = 0;
+
+            if (montoSolicitado > 0 && cantidadCuotas > 0)
+            {
+                var producto = _context.Productos.Where(x => x.Id == productoId).FirstOrDefault();
+                var terminos = _context.Terminos.Where(x => x.Id == producto.TerminosId).FirstOrDefault();
+                //Se cambia la tasa efectiva de Decimal a Double, porque la funcion que calcula potencia no soporta decimal
+                var mensual =  (montoSolicitado * ((terminos.TasaNominal + terminos.TasaGastosCobranza + terminos.TasaSeguros)/100) * cantidadCuotas);
+                var unico =  (montoSolicitado * (terminos.TasaGastosAdministrativos/100));
+                //montoCuota = Math.Round((((montoSolicitado * interesEfectivoMensual) + (montoSolicitado * terminos.TasaGastosAdministrativos) + (montoSolicitado * terminos.TasaGastosAdministrativos * cantidadCuotas) + (montoSolicitado * terminos.TasaSeguros * cantidadCuotas)) / cantidadCuotas), 2);
+                montoCuota = Math.Round(((montoSolicitado + unico + mensual) / cantidadCuotas), 2);
+                //ctf = Math.Round((((montoCuota*cantidadCuotas) - montoSolicitado)/cantidadCuotas)/100, 3);
+                ctf = Math.Round(((unico + mensual) / montoSolicitado)*100, 3);
+
+            }
+
+            SolicitudPrestamo credito = new SolicitudPrestamo
+            {
+                CostoTotalFinanciero = ctf,
+                ValorCuota = montoCuota
+            };
+
+            return Json(credito);
+        }
     }
 }

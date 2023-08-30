@@ -1,7 +1,10 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using WebApp.Data;
 using WebApp.Helpers;
 using WebApp.Models;
 
@@ -11,15 +14,18 @@ namespace WebApp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConverter _converter;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, IConverter converter)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, IConverter converter)
         {
             _logger = logger;
             _converter = converter;
+            _context = context;
         }
-
         public IActionResult Index()
         {
+
+            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion");
             return View();
         }
 
