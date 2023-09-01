@@ -85,10 +85,10 @@
                 @Html.DisplayFor(modelItem => item.DatosVerificados)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Genero.Id)
+                @Html.DisplayFor(modelItem => item.Genero.Descripcion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nacionalidad.Id)
+                    @Html.DisplayFor(modelItem => item.Nacionalidad.Descripcion)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

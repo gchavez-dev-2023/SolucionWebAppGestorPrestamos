@@ -55,10 +55,10 @@
                 @Html.DisplayFor(modelItem => item.UrlDocumento)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EstadoCivil.Id)
+                @Html.DisplayFor(modelItem => item.EstadoCivil.Descripcion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Persona.Id)
+                @Html.DisplayFor(modelItem => item.Persona.CedulaIdentidad)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

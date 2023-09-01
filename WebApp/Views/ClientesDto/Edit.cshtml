@@ -1,0 +1,200 @@
+﻿@model WebApp.Dtos.ClienteDto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Cliente</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="PersonaId" />
+            <div class="form-group">
+                <label asp-for="CedulaIdentidad" class="control-label"></label>
+                <input asp-for="CedulaIdentidad" class="form-control" />
+                <span asp-validation-for="CedulaIdentidad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Apellido" class="control-label"></label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaNacimiento" class="control-label"></label>
+                <input asp-for="FechaNacimiento" class="form-control" />
+                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GeneroId" class="control-label"></label>
+                <select asp-for="GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Domicilio" class="control-label"></label>
+                <input asp-for="Domicilio" class="form-control" />
+                <span asp-validation-for="Domicilio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CorreoElectronico" class="control-label"></label>
+                <input asp-for="CorreoElectronico" class="form-control" />
+                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NacionalidadId" class="control-label"></label>
+                <select asp-for="NacionalidadId" class="form-control" asp-items="ViewBag.NacionalidadId"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DomicilioAlternativo" class="control-label"></label>
+                <input asp-for="DomicilioAlternativo" class="form-control" />
+                <span asp-validation-for="DomicilioAlternativo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelefonoLaboral" class="control-label"></label>
+                <input asp-for="TelefonoLaboral" class="form-control" />
+                <span asp-validation-for="TelefonoLaboral" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="PersonaPoliticamenteExpuesta" /> @Html.DisplayNameFor(model => model.PersonaPoliticamenteExpuesta)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="EstadoCivilId" class="control-label"></label>
+                <select asp-for="EstadoCivilId" class="form-control" asp-items="ViewBag.EstadoCivilId"></select>
+            </div>
+            <div class="col-md-6 conyuge-form" style="display: none;">
+                <input type="hidden" asp-for="ConyugeId" />
+                <input type="hidden" asp-for="ConyugePersonaId" />
+                <div class="form-group">
+                    <label asp-for="ConyugeCedulaIdentidad" class="control-label"></label>
+                    <input asp-for="ConyugeCedulaIdentidad" class="form-control" />
+                    <span asp-validation-for="ConyugeCedulaIdentidad" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeNombre" class="control-label"></label>
+                    <input asp-for="ConyugeNombre" class="form-control" />
+                    <span asp-validation-for="ConyugeNombre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeApellido" class="control-label"></label>
+                    <input asp-for="ConyugeApellido" class="form-control" />
+                    <span asp-validation-for="ConyugeApellido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeFechaNacimiento" class="control-label"></label>
+                    <input asp-for="ConyugeFechaNacimiento" class="form-control" />
+                    <span asp-validation-for="ConyugeFechaNacimiento" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeGeneroId" class="control-label"></label>
+                    <select asp-for="ConyugeGeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeDomicilio" class="control-label"></label>
+                    <input asp-for="ConyugeDomicilio" class="form-control" />
+                    <span asp-validation-for="ConyugeDomicilio" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeCorreoElectronico" class="control-label"></label>
+                    <input asp-for="ConyugeCorreoElectronico" class="form-control" />
+                    <span asp-validation-for="ConyugeCorreoElectronico" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeTelefono" class="control-label"></label>
+                    <input asp-for="ConyugeTelefono" class="form-control" />
+                    <span asp-validation-for="ConyugeTelefono" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConyugeNacionalidadId" class="control-label"></label>
+                    <select asp-for="ConyugeNacionalidadId" class="form-control" asp-items="ViewBag.NacionalidadId"></select>
+                </div>
+            </div>
+            <input type="hidden" asp-for="OrigenIngresoId" />
+            <div class="form-group">
+                <label asp-for="TipoActividadId" class="control-label"></label>
+                <select asp-for="TipoActividadId" class="form-control" asp-items="ViewBag.TipoActividadId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaInicioActividad" class="control-label"></label>
+                <input asp-for="FechaInicioActividad" class="form-control" />
+                <span asp-validation-for="FechaInicioActividad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFinActividad" class="control-label"></label>
+                <input asp-for="FechaFinActividad" class="form-control" />
+                <span asp-validation-for="FechaFinActividad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MontoLiquidoPercibido" class="control-label"></label>
+                <input asp-for="MontoLiquidoPercibido" class="form-control" />
+                <span asp-validation-for="MontoLiquidoPercibido" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Scoring" class="control-label"></label>
+                <input asp-for="Scoring" class="form-control" />
+                <span asp-validation-for="Scoring" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //On Change
+            $('#EstadoCivilId').change(function () {
+                mostrarFormConguye();
+            });
+        });
+        //Funcion Calcular Cuota
+        function mostrarFormConguye() {
+            $.ajax({
+                type: "POST",
+                url: "/EstadosCivil/RequiereDatosConyuge",
+                dataType: 'json',
+                data: { "estadoCivilId": $("#EstadoCivilId").val() },
+                success: function (response) {
+                    if (response.requiereDatosConyuge) {
+                        $('.conyuge-form').show();
+                    }
+                    else {
+                        $('.conyuge-form').hide();
+                    }
+                },
+                failure: function (response) {
+                    alert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+    </script>
+}

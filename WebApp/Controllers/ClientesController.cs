@@ -49,8 +49,8 @@ namespace WebApp.Controllers
         // GET: Clientes/Create
         public IActionResult Create()
         {
-            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Id");
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id");
+            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Descripcion");
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad");
             return View();
         }
 
@@ -67,8 +67,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Id", cliente.EstadoCivilId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", cliente.PersonaId);
+            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Descripcion", cliente.EstadoCivilId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", cliente.PersonaId);
             return View(cliente);
         }
 
@@ -85,8 +85,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Id", cliente.EstadoCivilId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", cliente.PersonaId);
+            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Descripcion", cliente.EstadoCivilId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", cliente.PersonaId);
             return View(cliente);
         }
 
@@ -122,8 +122,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Id", cliente.EstadoCivilId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", cliente.PersonaId);
+            ViewData["EstadoCivilId"] = new SelectList(_context.EstadosCivil, "Id", "Descripcion", cliente.EstadoCivilId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", cliente.PersonaId);
             return View(cliente);
         }
 

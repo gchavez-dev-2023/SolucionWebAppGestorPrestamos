@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id");
-            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Id");
+            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Descripcion");
             return View();
         }
 
@@ -68,7 +68,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id", documento.SolicitudPrestamoId);
-            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Id", documento.TipoDocumentoId);
+            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Descripcion", documento.TipoDocumentoId);
             return View(documento);
         }
 
@@ -86,7 +86,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id", documento.SolicitudPrestamoId);
-            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Id", documento.TipoDocumentoId);
+            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Descripcion", documento.TipoDocumentoId);
             return View(documento);
         }
 
@@ -123,7 +123,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id", documento.SolicitudPrestamoId);
-            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Id", documento.TipoDocumentoId);
+            ViewData["TipoDocumentoId"] = new SelectList(_context.TiposDocumento, "Id", "Descripcion", documento.TipoDocumentoId);
             return View(documento);
         }
 

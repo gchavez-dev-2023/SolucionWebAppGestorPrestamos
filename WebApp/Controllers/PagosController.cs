@@ -51,8 +51,8 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id");
-            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Id");
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id");
+            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion");
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad");
             return View();
         }
 
@@ -70,8 +70,8 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id", pago.CuotaId);
-            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Id", pago.FormaPagoId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", pago.PersonaId);
+            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion", pago.FormaPagoId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", pago.PersonaId);
             return View(pago);
         }
 
@@ -89,8 +89,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id", pago.CuotaId);
-            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Id", pago.FormaPagoId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", pago.PersonaId);
+            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion", pago.FormaPagoId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", pago.PersonaId);
             return View(pago);
         }
 
@@ -127,8 +127,8 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id", pago.CuotaId);
-            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Id", pago.FormaPagoId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", pago.PersonaId);
+            ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion", pago.FormaPagoId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", pago.PersonaId);
             return View(pago);
         }
 

@@ -49,7 +49,7 @@ namespace WebApp.Controllers
         // GET: Avales/Create
         public IActionResult Create()
         {
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id");
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad");
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id");
             return View();
         }
@@ -67,7 +67,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", aval.PersonaId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", aval.PersonaId);
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id", aval.SolicitudPrestamoId);
             return View(aval);
         }
@@ -85,7 +85,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", aval.PersonaId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", aval.PersonaId);
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id", aval.SolicitudPrestamoId);
             return View(aval);
         }
@@ -122,7 +122,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", aval.PersonaId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", aval.PersonaId);
             ViewData["SolicitudPrestamoId"] = new SelectList(_context.SolicitudesPrestamo, "Id", "Id", aval.SolicitudPrestamoId);
             return View(aval);
         }

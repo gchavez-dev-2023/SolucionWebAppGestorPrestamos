@@ -159,5 +159,26 @@ namespace WebApp.Controllers
         {
           return (_context.EstadosCivil?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        [HttpPost]
+        public JsonResult RequiereDatosConyuge(int estadoCivilId)
+        {
+            bool requiereDatosConyuge = false;
+
+            if (estadoCivilId > 0)
+            {
+                var estadosCivil = _context.EstadosCivil.Where(x => x.Id == estadoCivilId).FirstOrDefault();
+                requiereDatosConyuge = estadosCivil.RequiereDatosConyuge;
+
+            }
+
+            EstadoCivil estadoCivil = new EstadoCivil
+            {
+                Id = estadoCivilId,
+                RequiereDatosConyuge = requiereDatosConyuge
+            };
+
+            return Json(estadoCivil);
+        }
     }
 }

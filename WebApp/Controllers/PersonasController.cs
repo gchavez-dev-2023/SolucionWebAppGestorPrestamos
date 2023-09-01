@@ -49,8 +49,8 @@ namespace WebApp.Controllers
         // GET: Personas/Create
         public IActionResult Create()
         {
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id");
-            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Id");
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion");
+            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion");
             return View();
         }
 
@@ -67,8 +67,8 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id", persona.GeneroId);
-            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Id", persona.NacionalidadId);
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion", persona.GeneroId);
+            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion", persona.NacionalidadId);
             return View(persona);
         }
 
@@ -85,8 +85,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id", persona.GeneroId);
-            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Id", persona.NacionalidadId);
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion", persona.GeneroId);
+            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion", persona.NacionalidadId);
             return View(persona);
         }
 
@@ -122,8 +122,8 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Id", persona.GeneroId);
-            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Id", persona.NacionalidadId);
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion", persona.GeneroId);
+            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion", persona.NacionalidadId);
             return View(persona);
         }
 

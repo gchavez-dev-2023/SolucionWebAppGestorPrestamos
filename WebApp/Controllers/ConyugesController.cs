@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id");
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad");
             return View();
         }
 
@@ -68,7 +68,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", conyuge.ClienteId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", conyuge.PersonaId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", conyuge.PersonaId);
             return View(conyuge);
         }
 
@@ -86,7 +86,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", conyuge.ClienteId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", conyuge.PersonaId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", conyuge.PersonaId);
             return View(conyuge);
         }
 
@@ -123,7 +123,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", conyuge.ClienteId);
-            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "Id", conyuge.PersonaId);
+            ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", conyuge.PersonaId);
             return View(conyuge);
         }
 

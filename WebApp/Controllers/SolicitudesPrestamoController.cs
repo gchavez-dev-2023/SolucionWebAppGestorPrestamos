@@ -84,7 +84,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Id");
+            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion");
             return View();
         }
 
@@ -102,7 +102,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", solicitudPrestamo.ClienteId);
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Id", solicitudPrestamo.ProductoId);
+            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamo.ProductoId);
             return View(solicitudPrestamo);
         }
 
@@ -120,7 +120,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", solicitudPrestamo.ClienteId);
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Id", solicitudPrestamo.ProductoId);
+            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamo.ProductoId);
             return View(solicitudPrestamo);
         }
 
@@ -157,7 +157,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", solicitudPrestamo.ClienteId);
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Id", solicitudPrestamo.ProductoId);
+            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamo.ProductoId);
             return View(solicitudPrestamo);
         }
 

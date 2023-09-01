@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
-            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Id");
+            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Descripcion");
             return View();
         }
 
@@ -68,7 +68,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", origenIngresoCliente.ClienteId);
-            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Id", origenIngresoCliente.TipoActividadId);
+            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Descripcion", origenIngresoCliente.TipoActividadId);
             return View(origenIngresoCliente);
         }
 
@@ -86,7 +86,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", origenIngresoCliente.ClienteId);
-            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Id", origenIngresoCliente.TipoActividadId);
+            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Descripcion", origenIngresoCliente.TipoActividadId);
             return View(origenIngresoCliente);
         }
 
@@ -123,7 +123,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", origenIngresoCliente.ClienteId);
-            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Id", origenIngresoCliente.TipoActividadId);
+            ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Descripcion", origenIngresoCliente.TipoActividadId);
             return View(origenIngresoCliente);
         }
 
