@@ -34,6 +34,7 @@ namespace WebApp.Controllers
             var cliente = await _context.Clientes.
                 Include(c => c.Persona).
                 Include(c => c.OrigenesIngresoClientes).
+                Include(c => c.EstadoCivil).
                 Include(c => c.Conyuges).
                 FirstOrDefaultAsync(m => m.Id == id);
 
@@ -42,8 +43,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var conyuge = cliente.Conyuges.FirstOrDefault();
-            var personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+            var personaConyuge = new Persona();
+
+            if (cliente.EstadoCivil.RequiereDatosConyuge)
+            {
+                var conyuge = cliente.Conyuges.FirstOrDefault();
+                personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+            }
 
             var clienteDto = new ClienteDto();
             clienteModelToDto(cliente, clienteDto, personaConyuge);
@@ -60,6 +66,7 @@ namespace WebApp.Controllers
             ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Descripcion");
             ViewData["ConyugeGeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion");
             ViewData["ConyugeNacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion");
+
             return View();
         }
 
@@ -168,6 +175,7 @@ namespace WebApp.Controllers
             var cliente = await _context.Clientes.
                 Include(c => c.Persona).
                 Include(c => c.OrigenesIngresoClientes).
+                Include(c => c.EstadoCivil).
                 Include(c => c.Conyuges).
                 FirstOrDefaultAsync(m => m.Id == id);
 
@@ -176,8 +184,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var conyuge = cliente.Conyuges.FirstOrDefault();
-            var personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+            var personaConyuge = new Persona();
+            
+            if (cliente.EstadoCivil.RequiereDatosConyuge)
+            {
+                var conyuge = cliente.Conyuges.FirstOrDefault();
+                personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+            }
 
             var clienteDto = new ClienteDto();
             clienteModelToDto(cliente, clienteDto, personaConyuge);
@@ -253,16 +266,19 @@ namespace WebApp.Controllers
                         //Persona Cliente
                         var personaCliente = await _context.Personas
                         .FirstOrDefaultAsync(m => m.Id == clienteDto.PersonaId);
-                        personaClienteDtoToModel(clienteDto, personaCliente);
+
                         //Evaluar si trajo datos la consulta de la BD
-                        if (personaCliente.Id != null)
+                        if (personaCliente != null)
                         {
                             //Actualizar Persona Cliente
+                            personaClienteDtoToModel(clienteDto, personaCliente);
                             _context.Update(personaCliente);
                         }
                         else
                         {
                             //Crear Persona Conyuge
+                            personaCliente = new Persona();
+                            personaClienteDtoToModel(clienteDto, personaCliente);
                             _context.Add(personaCliente);
                         }
                         await _context.SaveChangesAsync();
@@ -277,16 +293,18 @@ namespace WebApp.Controllers
                         //Origen Ingreso Cliente
                         var origenIngresoCliente = await _context.OrigenesIngresoCliente
                         .FirstOrDefaultAsync(m => m.Id == clienteDto.OrigenIngresoId);
-                        origenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
                         //Evaluar si trajo datos la consulta de la BD
-                        if (origenIngresoCliente.Id != null)
+                        if (origenIngresoCliente != null)
                         {
                             //Actualizar Origen Ingreso Cliente
+                            origenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
                             _context.Update(origenIngresoCliente);
                         }
                         else
                         {
                             //Crear Origen Ingreso Cliente
+                            origenIngresoCliente = new OrigenIngresoCliente();
+                            origenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
                             _context.Add(origenIngresoCliente);
                         }
                         await _context.SaveChangesAsync();
@@ -296,16 +314,18 @@ namespace WebApp.Controllers
                             //Persona Conyuge
                             var personaConyuge = await _context.Personas
                             .FirstOrDefaultAsync(m => m.Id == clienteDto.ConyugePersonaId);
-                            personaConyugeDtoToModel(clienteDto, personaConyuge);
                             //Evaluar si trajo datos la consulta de la BD
-                            if(personaConyuge.Id != null)
+                            if(personaConyuge != null)
                             {
                                 //Actualizar Persona Conyuge
+                                personaConyugeDtoToModel(clienteDto, personaConyuge);
                                 _context.Update(personaConyuge);
                             }
                             else
                             {
                                 //Crear Persona Conyuge
+                                personaConyuge = new Persona();
+                                personaConyugeDtoToModel(clienteDto, personaConyuge);
                                 _context.Add(personaConyuge);
                             }
                             await _context.SaveChangesAsync();
@@ -313,16 +333,18 @@ namespace WebApp.Controllers
                             //Conyuge
                             var conyuge = await _context.Conyuges
                             .FirstOrDefaultAsync(m => m.Id == clienteDto.ConyugeId);
-                            conguyeDtoToModel(cliente, personaConyuge, conyuge);
                             //Evaluar si trajo datos la consulta de la BD
-                            if (conyuge.Id != null)
+                            if (conyuge != null)
                             {
                                 //Actualizar Conyuge
+                                conguyeDtoToModel(cliente, personaConyuge, conyuge);
                                 _context.Update(conyuge);
                             }
                             else
                             {
                                 //Crear Conyuge
+                                conyuge = new Conyuge();
+                                conguyeDtoToModel(cliente, personaConyuge, conyuge);
                                 _context.Add(conyuge);
                             }
                             await _context.SaveChangesAsync();
@@ -334,7 +356,7 @@ namespace WebApp.Controllers
                             .FirstOrDefaultAsync(m => m.Id == clienteDto.ConyugeId);
                             
                             //Evaluar si trajo datos la consulta de la BD
-                            if (conyuge.Id != null)
+                            if (conyuge != null)
                             {
                                 //Eliminar Conyuge
                                 _context.Conyuges.Remove(conyuge);
@@ -346,7 +368,7 @@ namespace WebApp.Controllers
                             .FirstOrDefaultAsync(m => m.Id == clienteDto.ConyugePersonaId);
                             personaConyugeDtoToModel(clienteDto, personaConyuge);
                             //Evaluar si trajo datos la consulta de la BD
-                            if (personaConyuge.Id != null)
+                            if (personaConyuge != null)
                             {
                                 //Eliminar Conyuge
                                 _context.Personas.Remove(personaConyuge);
@@ -389,17 +411,30 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Clientes
-                .Include(c => c.EstadoCivil)
-                .Include(c => c.Persona)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var cliente = await _context.Clientes.
+                Include(c => c.Persona).
+                Include(c => c.OrigenesIngresoClientes).
+                Include(c => c.EstadoCivil).
+                Include(c => c.Conyuges).
+                FirstOrDefaultAsync(m => m.Id == id);
 
             if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(cliente);
+            var personaConyuge = new Persona();
+
+            if (cliente.EstadoCivil.RequiereDatosConyuge)
+            {
+                var conyuge = cliente.Conyuges.FirstOrDefault();
+                personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+            }
+
+            var clienteDto = new ClienteDto();
+            clienteModelToDto(cliente, clienteDto, personaConyuge);
+
+            return View(clienteDto);
         }
 
         // POST: Clientes/Delete/5
@@ -415,9 +450,42 @@ namespace WebApp.Controllers
             if (cliente != null)
             {
                 _context.Clientes.Remove(cliente);
+                await _context.SaveChangesAsync();
+            }
+            var personaCliente = await _context.Personas.FindAsync(cliente.PersonaId);
+            if (personaCliente != null)
+            {
+                _context.Personas.Remove(personaCliente);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+            var origenIngresoCliente = await _context.OrigenesIngresoCliente.FindAsync(cliente.OrigenesIngresoClientes.FirstOrDefault().Id);
+            if (origenIngresoCliente != null)
+            {
+                _context.OrigenesIngresoCliente.Remove(origenIngresoCliente);
+                await _context.SaveChangesAsync();
+            }
+
+            //evaluar Estado Civil
+            var estadoCivil = await _context.EstadosCivil
+            .FirstOrDefaultAsync(m => m.Id == cliente.EstadoCivilId);
+            bool requiereDatosConyuge = estadoCivil.RequiereDatosConyuge;
+            if (requiereDatosConyuge)
+            {
+                var conyuge = await _context.Conyuges.FindAsync(cliente.Conyuges.FirstOrDefault().Id);
+                if (cliente != null)
+                {
+                    _context.Conyuges.Remove(conyuge);
+                    await _context.SaveChangesAsync();
+                }
+                var personaConyuge = await _context.Personas.FindAsync(conyuge.PersonaId);
+                if (personaConyuge != null)
+                {
+                    _context.Personas.Remove(personaConyuge);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -506,7 +574,7 @@ namespace WebApp.Controllers
             clienteDto.Telefono = cliente.Persona.Telefono;
             clienteDto.NacionalidadId = cliente.Persona.NacionalidadId;
             //PersonaConyugeConyugeId
-            if(personaConyuge != null)
+            if(cliente.EstadoCivil.RequiereDatosConyuge)
             {
                 clienteDto.ConyugeId = cliente.Conyuges.FirstOrDefault().Id;
                 clienteDto.ConyugePersonaId = personaConyuge.Id;

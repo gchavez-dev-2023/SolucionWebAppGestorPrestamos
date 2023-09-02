@@ -7,6 +7,7 @@
 <h1>Create</h1>
 
 <h4>Cliente</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -75,7 +76,7 @@
                 <label asp-for="EstadoCivilId" class="control-label"></label>
                 <select asp-for="EstadoCivilId" class="form-control" asp-items="ViewBag.EstadoCivilId"></select>
             </div>
-            <div class="col-md-6 conyuge-form" style="display: none;">
+            <div class="col-md-6 conyuge-form" style="display: none">
                 <div class="form-group">
                     <label asp-for="ConyugeCedulaIdentidad" class="control-label"></label>
                     <input asp-for="ConyugeCedulaIdentidad" class="form-control" />
@@ -163,26 +164,31 @@
     }
 
     <script type="text/javascript">
+        var divConyuge = document.getElementById("EstadoCivilId");
+        divConyuge.addEventListener("change", Refresh);
+        Refresh();
+        /*
         $(document).ready(function () {
             //On Change
             $('#EstadoCivilId').change(function () {
                 mostrarFormConguye();
             });
         });
+        */
         //Funcion Calcular Cuota
-        function mostrarFormConguye() {
+        function Refresh() {
             $.ajax({
                 type: "POST",
                 url: "/EstadosCivil/RequiereDatosConyuge",
                 dataType: 'json',
-                data: {"estadoCivilId": $("#EstadoCivilId").val()},
+                data: { "estadoCivilId": $("#EstadoCivilId").val() },
                 success: function (response) {
                     if (response.requiereDatosConyuge) {
                         $('.conyuge-form').show();
                     }
-                    else{
+                    else {
                         $('.conyuge-form').hide();
-                    }                    
+                    }
                 },
                 failure: function (response) {
                     alert("failure " + response.responseText);

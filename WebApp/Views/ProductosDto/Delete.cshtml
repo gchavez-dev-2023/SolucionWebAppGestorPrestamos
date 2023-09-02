@@ -1,0 +1,181 @@
+﻿@model WebApp.Dtos.ProductoDto
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Producto</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaInicioVigencia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaInicioVigencia)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaFinVigencia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaFinVigencia)
+        </dd>
+        @*<dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Beneficios)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Beneficios.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Requisitos)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Requisitos.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Terminos)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Terminos.Id)
+        </dd>*@
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Aprobacion24Horas)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Aprobacion24Horas)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SolicitudEnLinea)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SolicitudEnLinea)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EdadMinima)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EdadMinima)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EdadMaxima)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EdadMaxima)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ScoringMinimo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ScoringMinimo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CantidadAvales)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CantidadAvales)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CantidadRecibosSueldo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CantidadRecibosSueldo)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MontoMinimo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MontoMinimo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MontoMaximo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MontoMaximo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PlazoMinimo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PlazoMinimo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PlazoMaximo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PlazoMaximo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaNominal)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaNominal)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaGastosAdministrativos)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaGastosAdministrativos)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaGastosCobranza)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaGastosCobranza)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaSeguros)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaSeguros)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaInteresMora)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaInteresMora)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EsPrepagable)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EsPrepagable)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaCastigoPrepago)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaCastigoPrepago)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaCoberturaAval)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaCoberturaAval)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TasaCoberturaConyuge)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TasaCoberturaConyuge)
+        </dd>
+
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
