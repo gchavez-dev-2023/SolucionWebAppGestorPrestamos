@@ -13,56 +13,105 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ClienteId" />
+            <input type="hidden" asp-for="ProductoId" />
             <div class="form-group">
-                <label asp-for="ClienteId" class="control-label"></label>
-                <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
-                <span asp-validation-for="ClienteId" class="text-danger"></span>
+                <label asp-for="ClienteDto.Id" class="control-label"></label>
+                <select asp-for="ClienteDto.Id" class="form-control" asp-items="ViewBag.ClienteId" disabled></select>
+                <!--Cuidado con la opcion Disable, ya que no pasa el valor hacia el formulario -->
             </div>
             <div class="form-group">
-                <label asp-for="ProductoId" class="control-label"></label>
-                <select asp-for="ProductoId" class="form-control" asp-items="ViewBag.ProductoId"></select>
-                <span asp-validation-for="ProductoId" class="text-danger"></span>
+                <label asp-for="ProductoDto.Id" class="control-label"></label>
+                <select asp-for="ProductoDto.Id" class="form-control" asp-items="ViewBag.ProductoId" disabled></select>
+                <!--Cuidado con la opcion Disable, ya que no pasa el valor hacia el formulario -->
             </div>
             <div class="form-group">
                 <label asp-for="MontoSolicitado" class="control-label"></label>
-                <input asp-for="MontoSolicitado" class="form-control" />
-                <span asp-validation-for="MontoSolicitado" class="text-danger"></span>
+                <input asp-for="MontoSolicitado" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <label asp-for="CantidadCuotas" class="control-label"></label>
-                <input asp-for="CantidadCuotas" class="form-control" />
-                <span asp-validation-for="CantidadCuotas" class="text-danger"></span>
+                <input asp-for="CantidadCuotas" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <label asp-for="ValorCuota" class="control-label"></label>
-                <input asp-for="ValorCuota" class="form-control" />
-                <span asp-validation-for="ValorCuota" class="text-danger"></span>
+                <input asp-for="ValorCuota" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <label asp-for="CostoTotalFinanciero" class="control-label"></label>
-                <input asp-for="CostoTotalFinanciero" class="form-control" />
-                <span asp-validation-for="CostoTotalFinanciero" class="text-danger"></span>
+                <input asp-for="CostoTotalFinanciero" class="form-control" readonly />
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="TasaCoberturaDeudaConyuge" class="control-label"></label>
                 <input asp-for="TasaCoberturaDeudaConyuge" class="form-control" />
                 <span asp-validation-for="TasaCoberturaDeudaConyuge" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="FechaSolicitud" class="control-label"></label>
-                <input asp-for="FechaSolicitud" class="form-control" />
-                <span asp-validation-for="FechaSolicitud" class="text-danger"></span>
+                <input asp-for="FechaSolicitud" class="form-control" readonly />
             </div>
-            <div class="form-group">
+            <input type="hidden" asp-for="UrlDocumento" />
+            @*<div class="form-group">
                 <label asp-for="UrlDocumento" class="control-label"></label>
                 <input asp-for="UrlDocumento" class="form-control" />
                 <span asp-validation-for="UrlDocumento" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
+                <input asp-for="Estado" class="form-control" readonly />
             </div>
+            
+            @for (int i = 0; i < Model.AvalesDto.Count; i++)
+            {
+                <div class="col-md-6 AvalesDto[i]-form">
+                    <input type="hidden" asp-for="AvalesDto[i].Id" />
+                    <input type="hidden" asp-for="AvalesDto[i].PersonaId" />
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].CedulaIdentidad" class="control-label"></label>
+                        <input asp-for="AvalesDto[i].CedulaIdentidad" class="form-control" />
+                        <span asp-validation-for="AvalesDto[i].CedulaIdentidad" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].Nombre" class="control-label"></label>
+                        <input asp-for="AvalesDto[i].Nombre" class="form-control" />
+                        <span asp-validation-for="AvalesDto[i].Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].Apellido" class="control-label"></label>
+                        <input asp-for="AvalesDto[i].Apellido" class="form-control" />
+                        <span asp-validation-for="AvalesDto[i].Apellido" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].FechaNacimiento" class="control-label"></label>
+                        <input asp-for="AvalesDto[i].FechaNacimiento" class="form-control" />
+                        <span asp-validation-for="AvalesDto[i].FechaNacimiento" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].GeneroId" class="control-label"></label>
+                        <select asp-for="AvalesDto[i].GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].Domicilio" class="control-label"></label>
+                        <input asp-for="AvalesDto[i].Domicilio" class="form-control" />
+                        <span asp-validation-for="AvalesDto[i].Domicilio" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].CorreoElectronico" class="control-label"></label>
+                        <input asp-for="AvalesDto[i].CorreoElectronico" class="form-control" />
+                        <span asp-validation-for="AvalesDto[i].CorreoElectronico" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].Telefono" class="control-label"></label>
+                        <input asp-for="AvalesDto[i].Telefono" class="form-control" />
+                        <span asp-validation-for="AvalesDto[i].Telefono" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AvalesDto[i].NacionalidadId" class="control-label"></label>
+                        <select asp-for="AvalesDto[i].NacionalidadId" class="form-control" asp-items="ViewBag.NacionalidadId"></select>
+                    </div>
+                    <input type="hidden" asp-for="AvalesDto[i].UrlDocumento" />
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

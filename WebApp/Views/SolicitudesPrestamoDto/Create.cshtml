@@ -12,13 +12,17 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ClienteId" />
+            <input type="hidden" asp-for="ProductoId" />
             <div class="form-group">
-                <label asp-for="ClienteId" class="control-label"></label>
-                <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.ClienteId" disabled></select>
+                <label asp-for="ClienteDto.Id" class="control-label"></label>
+                <select asp-for="ClienteDto.Id" class="form-control" asp-items="ViewBag.ClienteId" disabled></select>
+                <!--Cuidado con la opcion Disable, ya que no pasa el valor hacia el formulario -->
             </div>
             <div class="form-group">
-                <label asp-for="ProductoId" class="control-label"></label>
-                <select asp-for="ProductoId" class="form-control" asp-items="ViewBag.ProductoId" disabled></select>
+                <label asp-for="ProductoDto.Id" class="control-label"></label>
+                <select asp-for="ProductoDto.Id" class="form-control" asp-items="ViewBag.ProductoId" disabled></select>
+                <!--Cuidado con la opcion Disable, ya que no pasa el valor hacia el formulario -->
             </div>
             <div class="form-group">
                 <label asp-for="MontoSolicitado" class="control-label"></label>
