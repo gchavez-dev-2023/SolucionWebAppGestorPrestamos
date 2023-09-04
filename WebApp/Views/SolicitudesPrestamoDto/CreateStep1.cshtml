@@ -1,0 +1,210 @@
+﻿@model WebApp.Dtos.SolicitudPrestamoDto
+
+@{
+    ViewData["Title"] = "Create - Step 1";
+}
+
+<h1>Create - Step 1</h1>
+
+<h4>SolicitudPrestamo - Paso 1</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateStep2">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ClienteId" class="control-label"></label>
+                <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoId" class="control-label"></label>
+                <select asp-for="ProductoId" class="form-control" asp-items="ViewBag.ProductoId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoDto.EdadMinima" class="control-label"></label>
+                <input asp-for="ProductoDto.EdadMinima" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="ClienteDto.Edad" class="control-label"></label>
+                <input asp-for="ClienteDto.Edad" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoDto.EdadMaxima" class="control-label"></label>
+                <input asp-for="ProductoDto.EdadMaxima" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoDto.ScoringMinimo" class="control-label"></label>
+                <input asp-for="ProductoDto.ScoringMinimo" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="ClienteDto.Scoring" class="control-label"></label>
+                <input asp-for="ClienteDto.Scoring" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoDto.MontoMinimo" class="control-label"></label>
+                <input asp-for="ProductoDto.MontoMinimo" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="MontoSolicitado" class="control-label"></label>
+                <input asp-for="MontoSolicitado" class="form-control" />
+                <span asp-validation-for="MontoSolicitado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoDto.MontoMaximo" class="control-label"></label>
+                <input asp-for="ProductoDto.MontoMaximo" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoDto.PlazoMinimo" class="control-label"></label>
+                <input asp-for="ProductoDto.PlazoMinimo" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="CantidadCuotas" class="control-label"></label>
+                <input asp-for="CantidadCuotas" class="form-control" />
+                <span asp-validation-for="CantidadCuotas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductoDto.PlazoMaximo" class="control-label"></label>
+                <input asp-for="ProductoDto.PlazoMaximo" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="ValorCuota" class="control-label"></label>
+                <input asp-for="ValorCuota" class="form-control" readonly />
+                <span asp-validation-for="ValorCuota" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CostoTotalFinanciero" class="control-label"></label>
+                <input asp-for="CostoTotalFinanciero" class="form-control" readonly />
+                <span asp-validation-for="CostoTotalFinanciero" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="TasaCoberturaDeudaConyuge" class="control-label"></label>
+                <input asp-for="TasaCoberturaDeudaConyuge" class="form-control" />
+                <span asp-validation-for="TasaCoberturaDeudaConyuge" class="text-danger"></span>
+            </div>*@
+            @*<div class="form-group">
+                <label asp-for="FechaSolicitud" class="control-label"></label>
+                <input asp-for="FechaSolicitud" class="form-control" />
+                <span asp-validation-for="FechaSolicitud" class="text-danger"></span>
+            </div>*@
+            @*<div class="form-group">
+                <label asp-for="UrlDocumento" class="control-label"></label>
+                <input asp-for="UrlDocumento" class="form-control" />
+                <span asp-validation-for="UrlDocumento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                <input asp-for="Estado" class="form-control" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="CantidadAvales" class="control-label"></label>
+                <input asp-for="CantidadAvales" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Step 2" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        var productoVal = document.getElementById("ProductoId");
+        productoVal.addEventListener("change", RefreshProducto);
+        RefreshProducto();
+
+        var clienteVal = document.getElementById("ClienteId");
+        clienteVal.addEventListener("change", RefreshCliente);
+        RefreshCliente();
+
+        var montoSolicitado = document.getElementById("MontoSolicitado");
+        montoSolicitado.addEventListener("change", CalcularCuota);
+        CalcularCuota();
+
+        var cantidadCuotas = document.getElementById("CantidadCuotas");
+        cantidadCuotas.addEventListener("change", CalcularCuota);
+        CalcularCuota();
+
+        //Funcion Refrescar Producto
+        function RefreshProducto() {
+            $.ajax({
+                type: "POST",
+                url: "/Productos/EvalProducto",
+                dataType: 'json',
+                data: { "productoId": $("#ProductoId").val() },
+                success: function (response) {
+                    $("#ProductoDto_EdadMinima").val(response.edadMinima);
+                    $("#ProductoDto_EdadMaxima").val(response.edadMaxima);
+                    $("#ProductoDto_ScoringMinimo").val(response.scoringMinimo);
+                    $("#CantidadAvales").val(response.cantidadAvales);
+                    $("#ProductoDto_MontoMinimo").val(response.montoMinimo);
+                    $("#ProductoDto_MontoMaximo").val(response.montoMaximo);
+                    $("#ProductoDto_PlazoMinimo").val(response.plazoMinimo);
+                    $("#ProductoDto_PlazoMaximo").val(response.plazoMaximo);
+                    $("#CantidadCuotas").val(0);
+                },
+                failure: function (response) {
+                    alert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+
+        //Funcion Refrescar Cliente
+        function RefreshCliente() {
+            $.ajax({
+                type: "POST",
+                url: "/Clientes/EvalCliente",
+                dataType: 'json',
+                data: { "clienteId": $("#ClienteId").val() },
+                success: function (response) {
+                    $("#ClienteDto_Edad").val(response.edad);
+                    $("#ClienteDto_Scoring").val(response.scoring);
+                },
+                failure: function (response) {
+                    alert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+
+        //Funcion Calcular Cuota
+        function CalcularCuota() {
+            var montoSolicitado = parseFloat($("#MontoSolicitado").val());
+            var cantidadCuotas = parseInt($("#CantidadCuotas").val());
+
+            $.ajax({
+                type: "POST",
+                url: "/Productos/GetCTFyValorCuota",
+                dataType: 'json',
+                data: {
+                    "productoId": $("#ProductoId").val()
+                    , "montoSolicitado": $("#MontoSolicitado").val()
+                    , "cantidadCuotas": $("#CantidadCuotas").val()
+                },
+                success: function (response) {
+                    $("#CostoTotalFinanciero").val(response.costoTotalFinanciero);
+                    $("#ValorCuota").val(response.valorCuota);
+                },
+                failure: function (response) {
+                    alert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+    </script>
+}

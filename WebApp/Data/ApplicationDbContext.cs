@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
+using WebApp.Dtos;
 
 namespace WebApp.Data
 {
@@ -31,5 +32,6 @@ namespace WebApp.Data
         public virtual DbSet<Termino> Terminos { get; set; } = null!;
         public virtual DbSet<TipoActividad> TiposActividad { get; set; } = null!;
         public virtual DbSet<TipoDocumento> TiposDocumento { get; set; } = null!;
+        public DbSet<WebApp.Dtos.SolicitudPrestamoDto>? SolicitudPrestamoDto { get; set; }
     }
 }

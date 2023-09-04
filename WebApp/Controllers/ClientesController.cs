@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using WebApp.Dtos;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -169,6 +170,32 @@ namespace WebApp.Controllers
         private bool ClienteExists(int id)
         {
           return (_context.Clientes?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [HttpPost]
+        public JsonResult EvalCliente(int clienteId)
+        {
+            int edad = 0;
+            int scoring = 0;
+
+            var cliente = _context.Clientes
+                .Include(p => p.Persona)
+                .Where(x => x.Id == clienteId)
+                .FirstOrDefault();
+
+            if (cliente != null)
+            {
+                edad = DateTime.Today.Year - cliente.Persona.FechaNacimiento.Year;
+                scoring = cliente.Scoring;
+            }
+
+            ClienteDto clienteDto = new ClienteDto
+            {
+                Edad = edad,
+                Scoring = scoring
+            };
+
+            return Json(clienteDto);
         }
     }
 }

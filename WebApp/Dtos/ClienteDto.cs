@@ -29,6 +29,7 @@ namespace WebApp.Dtos
         [DisplayName("Fecha de Nacimiento")]
         [DataType(DataType.Date)]
         public DateTime FechaNacimiento { get; set; }
+        public int Edad { get; set; }
 
         [ForeignKey("Genero")]
         [DisplayName("Sexo")]
