@@ -42,7 +42,7 @@ namespace WebApp.Controllers
             }
 
             var productoDto = new ProductoDto();
-            productoModelToDto(producto, productoDto);
+            ProductoModelToDto(producto, productoDto);
 
             return View(productoDto);
         }
@@ -78,22 +78,22 @@ namespace WebApp.Controllers
                 else
                 {
                     var requisito = new Requisito();
-                    requisitoDtoToModel(productoDto, requisito);
+                    RequisitoDtoToModel(productoDto, requisito);
                     _context.Add(requisito);
                     await _context.SaveChangesAsync();
 
                     var beneficio = new Beneficio();
-                    beneficioDtoToModel(productoDto, beneficio);
+                    BeneficioDtoToModel(productoDto, beneficio);
                     _context.Add(beneficio);
                     await _context.SaveChangesAsync();
 
                     var termino = new Termino();
-                    terminoDtoToModel(productoDto, termino);
+                    TerminoDtoToModel(productoDto, termino);
                     _context.Add(termino);
                     await _context.SaveChangesAsync();
 
                     var producto = new Producto();
-                    productoDtoToModel(productoDto, producto, requisito, beneficio, termino);
+                    ProductoDtoToModel(productoDto, producto, requisito, beneficio, termino);
                     _context.Add(producto);
                     await _context.SaveChangesAsync();
 
@@ -126,7 +126,7 @@ namespace WebApp.Controllers
             }
 
             var productoDto = new ProductoDto();
-            productoModelToDto(producto, productoDto);
+            ProductoModelToDto(producto, productoDto);
 
             //ViewData["BeneficiosId"] = new SelectList(_context.Beneficios, "Id", "Id", producto.BeneficiosId);
             //ViewData["RequisitosId"] = new SelectList(_context.Requisitos, "Id", "Id", producto.RequisitosId);
@@ -169,14 +169,14 @@ namespace WebApp.Controllers
                         if (requisito != null)
                         {
                             //Actualizar Requisito
-                            requisitoDtoToModel(productoDto, requisito);
+                            RequisitoDtoToModel(productoDto, requisito);
                             _context.Update(requisito);
                         }
                         else
                         {
                             //Crear Requisito
                             requisito = new Requisito();
-                            requisitoDtoToModel(productoDto, requisito);
+                            RequisitoDtoToModel(productoDto, requisito);
                             _context.Add(requisito);
                         }
                         await _context.SaveChangesAsync();
@@ -189,14 +189,14 @@ namespace WebApp.Controllers
                         if (beneficio != null)
                         {
                             //Actualizar Beneficio
-                            beneficioDtoToModel(productoDto, beneficio);
+                            BeneficioDtoToModel(productoDto, beneficio);
                             _context.Update(beneficio);
                         }
                         else
                         {
                             //Crear Beneficio
                             beneficio = new Beneficio();
-                            beneficioDtoToModel(productoDto, beneficio);
+                            BeneficioDtoToModel(productoDto, beneficio);
                             _context.Add(beneficio);
                         }
                         await _context.SaveChangesAsync();
@@ -209,14 +209,14 @@ namespace WebApp.Controllers
                         if (termino != null)
                         {
                             //Actualizar Termino
-                            terminoDtoToModel(productoDto, termino);
+                            TerminoDtoToModel(productoDto, termino);
                             _context.Update(termino);
                         }
                         else
                         {
                             //Crear Termino
                             termino = new Termino();
-                            terminoDtoToModel(productoDto, termino);
+                            TerminoDtoToModel(productoDto, termino);
                             _context.Add(termino);
                         }
                         await _context.SaveChangesAsync();
@@ -225,7 +225,7 @@ namespace WebApp.Controllers
                         var producto = await _context.Productos
                         .FirstOrDefaultAsync(m => m.Id == productoDto.Id);
                         //Actualizar Producto
-                        productoDtoToModel(productoDto, producto, requisito, beneficio, termino);
+                        ProductoDtoToModel(productoDto, producto, requisito, beneficio, termino);
                         _context.Update(producto);
                         await _context.SaveChangesAsync();
 
@@ -272,7 +272,7 @@ namespace WebApp.Controllers
             }
 
             var productoDto = new ProductoDto();
-            productoModelToDto(producto, productoDto);
+            ProductoModelToDto(producto, productoDto);
 
             return View(productoDto);
         }
@@ -323,7 +323,7 @@ namespace WebApp.Controllers
             return (_context.Productos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        private static void productoModelToDto(Producto? producto, ProductoDto productoDto)
+        private static void ProductoModelToDto(Producto? producto, ProductoDto productoDto)
         {
             productoDto.Id = producto.Id;
             productoDto.Descripcion = producto.Descripcion;
@@ -354,7 +354,7 @@ namespace WebApp.Controllers
             productoDto.FechaFinVigencia = producto.FechaFinVigencia;
         }
 
-        private static void productoDtoToModel(ProductoDto productoDto, Producto producto, Requisito requisito, Beneficio beneficio, Termino termino)
+        private static void ProductoDtoToModel(ProductoDto productoDto, Producto producto, Requisito requisito, Beneficio beneficio, Termino termino)
         {
             producto.Id = productoDto.Id;
             producto.Descripcion = productoDto.Descripcion;
@@ -365,7 +365,7 @@ namespace WebApp.Controllers
             producto.FechaFinVigencia = productoDto.FechaFinVigencia;
         }
 
-        private static void requisitoDtoToModel(ProductoDto productoDto, Requisito requisito)
+        private static void RequisitoDtoToModel(ProductoDto productoDto, Requisito requisito)
         {
             requisito.Id = productoDto.RequisitosId;
             requisito.EdadMinima = productoDto.EdadMinima;
@@ -375,14 +375,14 @@ namespace WebApp.Controllers
             requisito.CantidadRecibosSueldo = productoDto.CantidadRecibosSueldo;
         }
 
-        private static void beneficioDtoToModel(ProductoDto productoDto, Beneficio beneficio)
+        private static void BeneficioDtoToModel(ProductoDto productoDto, Beneficio beneficio)
         {
             beneficio.Id = productoDto.BeneficiosId;
             beneficio.Aprobacion24Horas = productoDto.Aprobacion24Horas;
             beneficio.SolicitudEnLinea = productoDto.SolicitudEnLinea;
         }
 
-        private static void terminoDtoToModel(ProductoDto productoDto, Termino termino)
+        private static void TerminoDtoToModel(ProductoDto productoDto, Termino termino)
         {
             termino.Id = productoDto.TerminosId;
             termino.MontoMinimo = productoDto.MontoMinimo;

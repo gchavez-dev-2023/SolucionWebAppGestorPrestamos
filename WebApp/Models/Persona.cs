@@ -31,5 +31,10 @@ namespace WebApp.Models
         public virtual ICollection<Aval> Avales { get; set; }
         public virtual ICollection<Cliente> Clientes { get; set; }
         public virtual ICollection<Conyuge> Conyuges { get; set; }
+
+        public static implicit operator string?(Persona? v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

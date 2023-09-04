@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using WebApp.Data;
 using WebApp.Dtos;
 using WebApp.Helpers;
@@ -21,8 +22,13 @@ namespace WebApp.Controllers
         // GET: SolicitudesPrestamo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.SolicitudesPrestamo.Include(s => s.Cliente).Include(s => s.Producto);
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = await _context.SolicitudesPrestamo.Include(s => s.Cliente).Include(s => s.Producto).ToListAsync();
+            foreach (var item in applicationDbContext)
+            {
+                item.Cliente.Persona = await _context.Personas.FirstOrDefaultAsync(x => x.Id == item.Cliente.PersonaId);
+            }
+
+            return View( applicationDbContext);
         }
 
         // GET: SolicitudesPrestamo/Details/5
@@ -75,7 +81,7 @@ namespace WebApp.Controllers
                 .FirstOrDefaultAsync(m => m.Id == aval.PersonaId);
             }
 
-            solicitudPrestamoModelToDto(solicitudPrestamo, solicitudPrestamoDto, cliente, personaConyuge, producto);
+            SolicitudPrestamoModelToDto(solicitudPrestamo, solicitudPrestamoDto, cliente, personaConyuge, producto);
 
             return View(solicitudPrestamoDto);
         }
@@ -85,7 +91,13 @@ namespace WebApp.Controllers
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes.Include(c => c.Persona), "Id", "Persona.CedulaIdentidad");
             ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion");
-            return View();
+
+            var solicitudPrestamoDto = new SolicitudPrestamoDto();
+            //Inicializar campos necesarios
+            solicitudPrestamoDto.ClienteDto = new ClienteDto();
+            solicitudPrestamoDto.ProductoDto = new ProductoDto();
+            solicitudPrestamoDto.AvalesDto = new List<AvalDto>();
+            return View(solicitudPrestamoDto);
         }
 
         // GET: SolicitudesPrestamo/CreateStep2
@@ -132,6 +144,9 @@ namespace WebApp.Controllers
             //Inicializar
             solicitudPrestamoDto.AvalesDto = new List<AvalDto>();
 
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion");
+            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion");
+
             for (int i = 0; i < solicitudPrestamoDto.CantidadAvales; i++)
             {
                 var avalDto = new AvalDto();
@@ -146,6 +161,8 @@ namespace WebApp.Controllers
             //{
             //    return RedirectToAction(nameof(CreateStep1));
             //}
+            solicitudPrestamoDto.ClienteDto.Id = solicitudPrestamoDto.ClienteId;
+            solicitudPrestamoDto.ProductoDto.Id = solicitudPrestamoDto.ProductoId;
             return View(solicitudPrestamoDto);
         }
 
@@ -156,26 +173,114 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ClienteId,ClienteDto,ProductoId,ProductoDto,MontoSolicitado,CantidadCuotas,ValorCuota,CostoTotalFinanciero,TasaCoberturaDeudaConyuge,FechaSolicitud,UrlDocumento,Estado,CantidadAvales,AvalesDto")] SolicitudPrestamoDto solicitudPrestamoDto)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(solicitudPrestamoDto);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", solicitudPrestamoDto.ClienteId);
+
+            ViewData["ClienteId"] = new SelectList(_context.Clientes.Include(c => c.Persona), "Id", "Persona.CedulaIdentidad", solicitudPrestamoDto.ClienteId);
             ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamoDto.ProductoId);
-            //return View(nameof(CreateStep2), solicitudPrestamoDto);
-            for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+
+            ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion");
+            ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion");
+
+            try
             {
-                if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == "1234")
+                string clienteCedulaIdentidad = "";
+                string conyugeCedulaIdentidad = "";
+                var cliente = await _context.Clientes
+                    .Include(c => c.Persona)
+                    .Include(c => c.EstadoCivil)
+                    .Include(c => c.Conyuges)
+                    .FirstOrDefaultAsync(x => x.Id == solicitudPrestamoDto.ClienteId);
+
+                if (cliente != null)
+                {
+                    clienteCedulaIdentidad = cliente.Persona.CedulaIdentidad;
+                    if (cliente.EstadoCivil.RequiereDatosConyuge)
+                    {
+                        var conyuge = cliente.Conyuges.FirstOrDefault();
+                        if (conyuge != null)
+                        {
+                            var personaConyuge = await _context.Personas.FirstOrDefaultAsync(x => x.Id == conyuge.PersonaId);
+                            if (personaConyuge != null)
+                            {
+                                conyugeCedulaIdentidad = personaConyuge.CedulaIdentidad;
+                            }
+                        }
+
+                    }
+                }
+                //Lista para recolectar Cedula Identidad de Avales
+                List<string> listaCedulaIdentidadAvales = new List<string>();
+                for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+                {
+                    listaCedulaIdentidadAvales.Add(solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad);
+                    if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == clienteCedulaIdentidad)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                        "Cedula Identidad no puede ser el mismo del Cliente, error en Aval N° " + i + 1);
+                        return View(nameof(CreateStep2), solicitudPrestamoDto);
+                    }
+                    if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == conyugeCedulaIdentidad)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                        "Cedula Identidad no puede ser el mismo del Conyuge, error en Aval N° " + i + 1);
+                        return View(nameof(CreateStep2), solicitudPrestamoDto);
+                    }
+                }
+
+                //Comprobar si existen duplicados las Cedula Identidad de Avales.
+                var hasDuplicates = listaCedulaIdentidadAvales.GroupBy(x => x).Any(g => g.Count() > 1);
+                if (hasDuplicates)
                 {
                     ModelState.AddModelError(string.Empty,
-                    "No se completo la Cedula Identidad del Aval N° " + i+1);
+                    "Existe Cedula de Identidad duplicada entre los avales.");
                     return View(nameof(CreateStep2), solicitudPrestamoDto);
                 }
+
+                //Alta de Solicitud
+                SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
+                SolicitudPrestamoDtoToModel(solicitudPrestamoDto, solicitudPrestamo);
+                _context.Add(solicitudPrestamo);
+                await _context.SaveChangesAsync();
+
+                //Alta Avales
+                for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+                {
+                    //Alta Persona
+                    Persona persona = new Persona();
+                    PersonaDtoToModel(solicitudPrestamoDto.AvalesDto[i], persona);
+                    _context.Add(persona);
+                    await _context.SaveChangesAsync();
+
+                    //Alta Aval
+                    Aval aval = new Aval();
+                    aval.SolicitudPrestamoId = solicitudPrestamo.Id;
+                    aval.PersonaId = persona.Id;
+                    aval.TasaCoberturaDeuda = 0;//TODO enlazar al producto.terminos
+                    aval.UrlDocumento = "-";
+
+                    _context.Add(aval);
+                    await _context.SaveChangesAsync();
+                }
+
+                //Termino OK
+                return RedirectToAction(nameof(Index));
+
+                //if (ModelState.IsValid)
+                //{
+                //    _context.Add(solicitudPrestamoDto);
+                //    await _context.SaveChangesAsync();
+                //    return RedirectToAction(nameof(Index));
+                //}
             }
-            return RedirectToAction(nameof(Index));
+            catch (Exception e) {
+                ModelState.AddModelError(string.Empty,
+                        "Error: " + e.Message);
+            }
+
+            return View(nameof(CreateStep2), solicitudPrestamoDto);
+            //return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: SolicitudesPrestamo/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -185,14 +290,55 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var solicitudPrestamo = await _context.SolicitudesPrestamo.FindAsync(id);
+            var solicitudPrestamo = await _context.SolicitudesPrestamo
+                .Include(s => s.Avales)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (solicitudPrestamo == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", solicitudPrestamo.ClienteId);
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamo.ProductoId);
-            return View(solicitudPrestamo);
+
+            var cliente = await _context.Clientes.
+                Include(c => c.Persona).
+                Include(c => c.OrigenesIngresoClientes).
+                Include(c => c.EstadoCivil).
+                Include(c => c.Conyuges).
+                FirstOrDefaultAsync(m => m.Id == solicitudPrestamo.ClienteId);
+
+            var personaConyuge = new Persona();
+
+            if (cliente.EstadoCivil.RequiereDatosConyuge)
+            {
+                var conyuge = cliente.Conyuges.FirstOrDefault();
+                personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+            }
+
+
+            var producto = await _context.Productos
+                .Include(p => p.Beneficios)
+                .Include(p => p.Requisitos)
+                .Include(p => p.Terminos)
+                .FirstOrDefaultAsync(m => m.Id == solicitudPrestamo.ProductoId);
+
+            var solicitudPrestamoDto = new SolicitudPrestamoDto();
+            //Inicializar campos necesarios
+            solicitudPrestamoDto.ClienteDto = new ClienteDto();
+            solicitudPrestamoDto.ProductoDto = new ProductoDto();
+            solicitudPrestamoDto.AvalesDto = new List<AvalDto>();
+
+            foreach (var aval in solicitudPrestamo.Avales)
+            {
+                aval.Persona = await _context.Personas
+                .FirstOrDefaultAsync(m => m.Id == aval.PersonaId);
+            }
+
+            SolicitudPrestamoModelToDto(solicitudPrestamo, solicitudPrestamoDto, cliente, personaConyuge, producto);
+
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", solicitudPrestamoDto.ClienteId);
+            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamoDto.ProductoId);
+
+            return View(solicitudPrestamoDto);
+
         }
 
         // POST: SolicitudesPrestamo/Edit/5
@@ -243,6 +389,7 @@ namespace WebApp.Controllers
             var solicitudPrestamo = await _context.SolicitudesPrestamo
                 .Include(s => s.Avales)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (solicitudPrestamo == null)
             {
                 return NotFound();
@@ -282,7 +429,7 @@ namespace WebApp.Controllers
                 .FirstOrDefaultAsync(m => m.Id == aval.PersonaId);
             }
 
-            solicitudPrestamoModelToDto(solicitudPrestamo, solicitudPrestamoDto, cliente, personaConyuge, producto);
+            SolicitudPrestamoModelToDto(solicitudPrestamo, solicitudPrestamoDto, cliente, personaConyuge, producto);
 
             return View(solicitudPrestamoDto);
         }
@@ -296,28 +443,32 @@ namespace WebApp.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.SolicitudesPrestamo'  is null.");
             }
-            var solicitudPrestamo = await _context.SolicitudesPrestamo.FindAsync(id);
+
+            var solicitudPrestamo = await _context.SolicitudesPrestamo
+                .Include(c => c.Avales)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (solicitudPrestamo != null)
             {
+                //Eliminar SolicitudPrestamo
                 _context.SolicitudesPrestamo.Remove(solicitudPrestamo);
                 await _context.SaveChangesAsync();
-            }
-
-            var avales = await _context.Avales.FindAsync(solicitudPrestamo.Id);
-            if (avales != null)
-            {
+                //Recorrer los avales asociados
                 foreach (var aval in solicitudPrestamo.Avales)
                 {
-                    _context.Avales.Remove(aval);
-                    await _context.SaveChangesAsync();
-
+                    //Recuperar Persona asociada al Aval
                     var persona = await _context.Personas
                     .FirstOrDefaultAsync(m => m.Id == aval.PersonaId);
                     if (persona != null)
                     {
+                        //Eliminar Persona
                         _context.Personas.Remove(persona);
                         await _context.SaveChangesAsync();
-                    }                        
+                    }
+
+                    //Eliminar Aval
+                    //_context.Avales.Remove(aval);
+                    //await _context.SaveChangesAsync();
                 }
             }
 
@@ -329,13 +480,13 @@ namespace WebApp.Controllers
             return (_context.SolicitudesPrestamo?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        private static void solicitudPrestamoModelToDto(SolicitudPrestamo? solicitudPrestamo, SolicitudPrestamoDto solicitudPrestamoDto, Cliente? cliente, Persona? personaConyuge, Producto? producto)
+        private static void SolicitudPrestamoModelToDto(SolicitudPrestamo? solicitudPrestamo, SolicitudPrestamoDto solicitudPrestamoDto, Cliente? cliente, Persona? personaConyuge, Producto? producto)
         {
             solicitudPrestamoDto.Id = solicitudPrestamo.Id;
             solicitudPrestamoDto.ClienteId = solicitudPrestamo.Cliente.Id;
-            clienteModelToDto(cliente, solicitudPrestamoDto.ClienteDto, personaConyuge);
+            ClienteModelToDto(cliente, solicitudPrestamoDto.ClienteDto, personaConyuge);
             solicitudPrestamoDto.ProductoId = solicitudPrestamo.Producto.Id;
-            productoModelToDto(producto, solicitudPrestamoDto.ProductoDto);
+            ProductoModelToDto(producto, solicitudPrestamoDto.ProductoDto);
             solicitudPrestamoDto.MontoSolicitado = solicitudPrestamo.MontoSolicitado;
             solicitudPrestamoDto.CantidadCuotas = solicitudPrestamo.CantidadCuotas;
             solicitudPrestamoDto.ValorCuota = solicitudPrestamo.ValorCuota;
@@ -364,7 +515,7 @@ namespace WebApp.Controllers
             }
         }
 
-        private static void clienteModelToDto(Cliente? cliente, ClienteDto clienteDto, Persona? personaConyuge)
+        private static void ClienteModelToDto(Cliente? cliente, ClienteDto clienteDto, Persona? personaConyuge)
         {
             clienteDto.Id = cliente.Id;
             clienteDto.DomicilioAlternativo = cliente.DomicilioAlternativo;
@@ -410,7 +561,7 @@ namespace WebApp.Controllers
             }
         }
 
-        private static void productoModelToDto(Producto? producto, ProductoDto productoDto)
+        private static void ProductoModelToDto(Producto? producto, ProductoDto productoDto)
         {
             productoDto.Id = producto.Id;
             productoDto.Descripcion = producto.Descripcion;
@@ -440,6 +591,34 @@ namespace WebApp.Controllers
             productoDto.FechaInicioVigencia = producto.FechaInicioVigencia;
             productoDto.FechaFinVigencia = producto.FechaFinVigencia;
         }
+        private static void SolicitudPrestamoDtoToModel(SolicitudPrestamoDto solicitudPrestamoDto, SolicitudPrestamo solicitudPrestamo)
+        {
+            solicitudPrestamo.ClienteId = solicitudPrestamoDto.ClienteId;
+            solicitudPrestamo.ProductoId = solicitudPrestamoDto.ProductoId;
+            solicitudPrestamo.MontoSolicitado = solicitudPrestamoDto.MontoSolicitado;
+            solicitudPrestamo.CantidadCuotas = solicitudPrestamoDto.CantidadCuotas;
+            solicitudPrestamo.ValorCuota = solicitudPrestamoDto.ValorCuota;
+            solicitudPrestamo.CostoTotalFinanciero = solicitudPrestamoDto.CostoTotalFinanciero;
+            solicitudPrestamo.TasaCoberturaDeudaConyuge = solicitudPrestamoDto.TasaCoberturaDeudaConyuge;
+            solicitudPrestamo.FechaSolicitud = solicitudPrestamoDto.FechaSolicitud;
+            solicitudPrestamo.UrlDocumento = "-";
+            solicitudPrestamo.Estado = "Analisis";
+        }
 
+        private static void PersonaDtoToModel(AvalDto avalDto, Persona persona)
+        {
+            persona.CedulaIdentidad = avalDto.CedulaIdentidad;
+            persona.Nombre = avalDto.Nombre;
+            persona.Apellido = avalDto.Apellido;
+            persona.FechaNacimiento = avalDto.FechaNacimiento;
+            persona.GeneroId = avalDto.GeneroId;
+            persona.Domicilio = avalDto.Domicilio;
+            persona.CorreoElectronico = avalDto.CorreoElectronico;
+            persona.Telefono = avalDto.Telefono;
+            persona.NacionalidadId = avalDto.NacionalidadId;
+            persona.UrlImagen = "-";
+            persona.UrlDocumento = "-";
+            persona.DatosVerificados = true;
+        }
     }
 }

@@ -37,7 +37,7 @@
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cliente)
+                @Html.DisplayNameFor(model => model.Cliente.Persona.CedulaIdentidad)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Producto)
@@ -74,7 +74,7 @@
                     @Html.DisplayFor(modelItem => item.Estado)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Cliente.Id)
+                    @Html.DisplayFor(modelItem => item.Cliente.Persona.CedulaIdentidad)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Producto.Descripcion)

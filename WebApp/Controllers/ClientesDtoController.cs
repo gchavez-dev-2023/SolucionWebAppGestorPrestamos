@@ -52,7 +52,7 @@ namespace WebApp.Controllers
             }
 
             var clienteDto = new ClienteDto();
-            clienteModelToDto(cliente, clienteDto, personaConyuge);
+            ClienteModelToDto(cliente, clienteDto, personaConyuge);
 
             return View(clienteDto);
         }
@@ -120,19 +120,19 @@ namespace WebApp.Controllers
                 {
                     //Crear Persona Cliente
                     var personaCliente = new Persona();
-                    personaClienteDtoToModel(clienteDto, personaCliente);
+                    PersonaClienteDtoToModel(clienteDto, personaCliente);
                     _context.Add(personaCliente);
                     await _context.SaveChangesAsync();
 
                     //Crear Cliente
                     var cliente = new Cliente();
-                    clienteDtoToModel(clienteDto, personaCliente, cliente);
+                    ClienteDtoToModel(clienteDto, personaCliente, cliente);
                     _context.Add(cliente);
                     await _context.SaveChangesAsync();
 
                     //Ingresos Origen Ingreso Cliente
                     var origenIngresoCliente = new OrigenIngresoCliente();
-                    origenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
+                    OrigenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
                     _context.Add(origenIngresoCliente);
                     await _context.SaveChangesAsync();
 
@@ -140,13 +140,13 @@ namespace WebApp.Controllers
                     {
                         //Crear Persona Conyuge
                         var personaConyuge = new Persona();
-                        personaConyugeDtoToModel(clienteDto, personaConyuge);
+                        PersonaConyugeDtoToModel(clienteDto, personaConyuge);
                         _context.Add(personaConyuge);
                         await _context.SaveChangesAsync();
 
                         //Crear Conyuge
                         var conyuge = new Conyuge();
-                        conguyeDtoToModel(cliente, personaConyuge, conyuge);
+                        ConguyeDtoToModel(cliente, personaConyuge, conyuge);
                         _context.Add(conyuge);
                         await _context.SaveChangesAsync();
                     }
@@ -193,7 +193,7 @@ namespace WebApp.Controllers
             }
 
             var clienteDto = new ClienteDto();
-            clienteModelToDto(cliente, clienteDto, personaConyuge);
+            ClienteModelToDto(cliente, clienteDto, personaConyuge);
 
             ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion", clienteDto.GeneroId);
             ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion", clienteDto.NacionalidadId);
@@ -271,14 +271,14 @@ namespace WebApp.Controllers
                         if (personaCliente != null)
                         {
                             //Actualizar Persona Cliente
-                            personaClienteDtoToModel(clienteDto, personaCliente);
+                            PersonaClienteDtoToModel(clienteDto, personaCliente);
                             _context.Update(personaCliente);
                         }
                         else
                         {
                             //Crear Persona Conyuge
                             personaCliente = new Persona();
-                            personaClienteDtoToModel(clienteDto, personaCliente);
+                            PersonaClienteDtoToModel(clienteDto, personaCliente);
                             _context.Add(personaCliente);
                         }
                         await _context.SaveChangesAsync();
@@ -286,7 +286,7 @@ namespace WebApp.Controllers
                         //Actualizar Cliente
                         var cliente = await _context.Clientes
                         .FirstOrDefaultAsync(m => m.Id == clienteDto.Id);
-                        clienteDtoToModel(clienteDto, personaCliente, cliente);
+                        ClienteDtoToModel(clienteDto, personaCliente, cliente);
                         _context.Update(cliente);
                         await _context.SaveChangesAsync();
 
@@ -297,14 +297,14 @@ namespace WebApp.Controllers
                         if (origenIngresoCliente != null)
                         {
                             //Actualizar Origen Ingreso Cliente
-                            origenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
+                            OrigenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
                             _context.Update(origenIngresoCliente);
                         }
                         else
                         {
                             //Crear Origen Ingreso Cliente
                             origenIngresoCliente = new OrigenIngresoCliente();
-                            origenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
+                            OrigenIngresoClienteDtoToModel(clienteDto, cliente, origenIngresoCliente);
                             _context.Add(origenIngresoCliente);
                         }
                         await _context.SaveChangesAsync();
@@ -318,14 +318,14 @@ namespace WebApp.Controllers
                             if(personaConyuge != null)
                             {
                                 //Actualizar Persona Conyuge
-                                personaConyugeDtoToModel(clienteDto, personaConyuge);
+                                PersonaConyugeDtoToModel(clienteDto, personaConyuge);
                                 _context.Update(personaConyuge);
                             }
                             else
                             {
                                 //Crear Persona Conyuge
                                 personaConyuge = new Persona();
-                                personaConyugeDtoToModel(clienteDto, personaConyuge);
+                                PersonaConyugeDtoToModel(clienteDto, personaConyuge);
                                 _context.Add(personaConyuge);
                             }
                             await _context.SaveChangesAsync();
@@ -337,14 +337,14 @@ namespace WebApp.Controllers
                             if (conyuge != null)
                             {
                                 //Actualizar Conyuge
-                                conguyeDtoToModel(cliente, personaConyuge, conyuge);
+                                ConguyeDtoToModel(cliente, personaConyuge, conyuge);
                                 _context.Update(conyuge);
                             }
                             else
                             {
                                 //Crear Conyuge
                                 conyuge = new Conyuge();
-                                conguyeDtoToModel(cliente, personaConyuge, conyuge);
+                                ConguyeDtoToModel(cliente, personaConyuge, conyuge);
                                 _context.Add(conyuge);
                             }
                             await _context.SaveChangesAsync();
@@ -366,7 +366,7 @@ namespace WebApp.Controllers
                             //Persona Conyuge
                             var personaConyuge = await _context.Personas
                             .FirstOrDefaultAsync(m => m.Id == clienteDto.ConyugePersonaId);
-                            personaConyugeDtoToModel(clienteDto, personaConyuge);
+                            PersonaConyugeDtoToModel(clienteDto, personaConyuge);
                             //Evaluar si trajo datos la consulta de la BD
                             if (personaConyuge != null)
                             {
@@ -432,7 +432,7 @@ namespace WebApp.Controllers
             }
 
             var clienteDto = new ClienteDto();
-            clienteModelToDto(cliente, clienteDto, personaConyuge);
+            ClienteModelToDto(cliente, clienteDto, personaConyuge);
 
             return View(clienteDto);
         }
@@ -494,7 +494,7 @@ namespace WebApp.Controllers
             return (_context.Clientes?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        private static void personaClienteDtoToModel(ClienteDto clienteDto, Persona persona)
+        private static void PersonaClienteDtoToModel(ClienteDto clienteDto, Persona persona)
         {
             persona.CedulaIdentidad = clienteDto.CedulaIdentidad;
             persona.Nombre = clienteDto.Nombre;
@@ -510,7 +510,7 @@ namespace WebApp.Controllers
             persona.DatosVerificados = true;
         }
 
-        private static void personaConyugeDtoToModel(ClienteDto clienteDto, Persona persona)
+        private static void PersonaConyugeDtoToModel(ClienteDto clienteDto, Persona persona)
         {
             persona.CedulaIdentidad = clienteDto.ConyugeCedulaIdentidad;
             persona.Nombre = clienteDto.ConyugeNombre;
@@ -526,7 +526,7 @@ namespace WebApp.Controllers
             persona.DatosVerificados = true;
         }
 
-        private static void clienteDtoToModel(ClienteDto clienteDto, Persona persona, Cliente cliente)
+        private static void ClienteDtoToModel(ClienteDto clienteDto, Persona persona, Cliente cliente)
         {
             cliente.PersonaId = persona.Id;
             cliente.DomicilioAlternativo = clienteDto.DomicilioAlternativo;
@@ -537,7 +537,7 @@ namespace WebApp.Controllers
             cliente.UrlDocumento = "-";
         }
 
-        private static void origenIngresoClienteDtoToModel(ClienteDto clienteDto, Cliente cliente, OrigenIngresoCliente origenIngresoCliente)
+        private static void OrigenIngresoClienteDtoToModel(ClienteDto clienteDto, Cliente cliente, OrigenIngresoCliente origenIngresoCliente)
         {
             origenIngresoCliente.ClienteId = cliente.Id;
             origenIngresoCliente.TipoActividadId = clienteDto.TipoActividadId;
@@ -547,14 +547,14 @@ namespace WebApp.Controllers
             origenIngresoCliente.UrlDocumento = "-";
         }
 
-        private static void conguyeDtoToModel(Cliente cliente, Persona persona, Conyuge conyuge)
+        private static void ConguyeDtoToModel(Cliente cliente, Persona persona, Conyuge conyuge)
         {
             conyuge.PersonaId = persona.Id;
             conyuge.ClienteId = cliente.Id;
             conyuge.UrlDocumento = "-";
         }
 
-        private static void clienteModelToDto(Cliente? cliente, ClienteDto clienteDto, Persona? personaConyuge)
+        private static void ClienteModelToDto(Cliente? cliente, ClienteDto clienteDto, Persona? personaConyuge)
         {
             clienteDto.Id = cliente.Id;
             clienteDto.DomicilioAlternativo = cliente.DomicilioAlternativo;
