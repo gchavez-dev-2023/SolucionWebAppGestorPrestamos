@@ -1,17 +1,24 @@
 ﻿@model IEnumerable<WebApp.Models.SolicitudPrestamo>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de Solicitud Prestamos";
 }
 
-<h1>Index</h1>
+<h1>Lista de Solicitud Prestamos</h1>
 
 <p>
-    <a asp-action="CreateStep1">Create New</a>
+    <a asp-action="CreateStep1" class="btn btn-success text-white">Nueva Solicitud</a>
 </p>
-<table class="table">
-    <thead>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cliente.Persona.CedulaIdentidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Producto.Descripcion)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.MontoSolicitado)
             </th>
@@ -25,22 +32,10 @@
                 @Html.DisplayNameFor(model => model.CostoTotalFinanciero)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TasaCoberturaDeudaConyuge)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.FechaSolicitud)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UrlDocumento)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cliente.Persona.CedulaIdentidad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Producto)
             </th>
             <th></th>
         </tr>
@@ -49,6 +44,12 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cliente.Persona.CedulaIdentidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Producto.Descripcion)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.MontoSolicitado)
                 </td>
@@ -62,27 +63,17 @@
                     @Html.DisplayFor(modelItem => item.CostoTotalFinanciero)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TasaCoberturaDeudaConyuge)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.FechaSolicitud)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UrlDocumento)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Estado)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Cliente.Persona.CedulaIdentidad)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Producto.Descripcion)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>
+                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>
+                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>
+                    </div>
                 </td>
             </tr>
         }

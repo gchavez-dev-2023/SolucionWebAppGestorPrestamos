@@ -1,16 +1,17 @@
 ﻿@model IEnumerable<WebApp.Models.Producto>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de Productos Financieros";
 }
 
-<h1>Index</h1>
+<h1>Lista de Productos Financieros</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success text-white" >Nuevo Producto</a>
 </p>
-<table class="table">
-    <thead>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Descripcion)
@@ -22,13 +23,13 @@
                 @Html.DisplayNameFor(model => model.FechaFinVigencia)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Beneficios)
+                @Html.DisplayNameFor(model => model.Beneficios.SolicitudEnLinea)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Requisitos)
+                @Html.DisplayNameFor(model => model.Requisitos.ScoringMinimo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Terminos)
+                @Html.DisplayNameFor(model => model.Terminos.TasaNominal)
             </th>
             <th></th>
         </tr>
@@ -47,18 +48,20 @@
                     @Html.DisplayFor(modelItem => item.FechaFinVigencia)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Beneficios.Id)
+                    @Html.DisplayFor(modelItem => item.Beneficios.SolicitudEnLinea)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Requisitos.Id)
+                    @Html.DisplayFor(modelItem => item.Requisitos.ScoringMinimo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Terminos.Id)
+                    @Html.DisplayFor(modelItem => item.Terminos.TasaNominal)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>                         
+                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>                         
+                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>
+                    </div>
                 </td>
             </tr>
         }

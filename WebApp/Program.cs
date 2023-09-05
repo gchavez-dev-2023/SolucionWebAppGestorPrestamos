@@ -68,7 +68,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -98,5 +97,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+//Redireccionar las paginas de Identity que no se desean activar
+//En este caso el Regitrar nuevo usuario esta deshabilitado.
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
+    endpoints.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
+});
 
 app.Run();

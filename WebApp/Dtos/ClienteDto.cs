@@ -93,7 +93,7 @@ namespace WebApp.Dtos
         [ForeignKey("EstadoCivil")]
         [DisplayName("Estado Civil")]
         public int EstadoCivilId { get; set; }
-        
+
         //Datos Persona-Conyuge
         public int ConyugeId { get; set; }
         public int ConyugePersonaId { get; set; }

@@ -24,8 +24,8 @@ namespace WebApp.Controllers
         }
         public IActionResult Index()
         {
-
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion");
+            //Recuperar los productos que se pueden simular desde la pagina
+            ViewData["ProductoId"] = new SelectList(_context.Productos.Where(c => c.Beneficios.SolicitudEnLinea), "Id", "Descripcion");
             return View();
         }
 

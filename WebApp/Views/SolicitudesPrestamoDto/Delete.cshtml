@@ -1,15 +1,22 @@
 ﻿@model WebApp.Dtos.SolicitudPrestamoDto
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar Solicitud Prestamo";
 }
 
-<h1>Delete</h1>
+<h1>Eliminar</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>¿Seguro que desea eliminar?</h3>
 <div>
-    <h4>SolicitudPrestamo</h4>
+    <h4>Solicitud Prestamo</h4>
     <hr />
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        <input type="submit" value="Confirmar" class="btn btn-danger" />
+    </form>
+
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ClienteDto.CedulaIdentidad)
@@ -112,9 +119,4 @@
         </table>
     </dl>
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
 </div>

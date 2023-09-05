@@ -151,10 +151,10 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-
                 //evaluar si existe Producto
                 var existeProducto = await _context.Productos
-                    .FirstOrDefaultAsync(m => m.Descripcion == productoDto.Descripcion) == null ? false : true;
+                    .FirstOrDefaultAsync(m => m.Id != productoDto.Id
+                                      && m.Descripcion == productoDto.Descripcion) == null ? false : true;
                 if (existeProducto)
                 {
                     ModelState.AddModelError(string.Empty,

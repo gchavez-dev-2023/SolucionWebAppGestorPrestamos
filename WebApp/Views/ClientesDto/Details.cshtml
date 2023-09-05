@@ -1,14 +1,20 @@
 ﻿@model WebApp.Dtos.ClienteDto
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle Cliente";
 }
 
-<h1>Details</h1>
+<h1>Detalle</h1>
 
 <div>
     <h4>Cliente</h4>
     <hr />
+
+    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model?.Id">Editar</a>
+    </div>
+
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CedulaIdentidad)
@@ -52,18 +58,6 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Telefono)
         </dd>
-        @*<dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Genero)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Genero.Descripcion)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nacionalidad)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nacionalidad.Descripcion)
-        </dd>*@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DomicilioAlternativo)
         </dt>
@@ -106,12 +100,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MontoLiquidoPercibido)
         </dd>
-        @*<dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EstadoCivil)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EstadoCivil.Descripcion)
-        </dd>*@
+
         @if (Model.ConyugeCedulaIdentidad != null)
         {
             <div class="col-md-6 conyuge-form">
@@ -161,7 +150,4 @@
         }
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

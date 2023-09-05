@@ -1,16 +1,23 @@
 ﻿@model WebApp.Dtos.SolicitudPrestamoDto
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Solicitud Prestamo";
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
-<h4>SolicitudPrestamo</h4>
+<h4>Solicitud Prestamo</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
+            <div class="form-group">
+                <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="ClienteId" />
@@ -112,15 +119,8 @@
                     <input type="hidden" asp-for="AvalesDto[i].UrlDocumento" />
                 </div>
             }
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

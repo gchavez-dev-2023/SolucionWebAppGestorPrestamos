@@ -115,6 +115,7 @@ namespace WebApp.Controllers
 
         }
 
+        [Authorize(Roles = "SUPERUSER,ADMINISTRADOR,GERENTE,COLABORADOR")]
         [HttpPost]
         public JsonResult GetCTFyValorCuota(int productoId, decimal montoSolicitado, int cantidadCuotas)
         {
@@ -149,5 +150,40 @@ namespace WebApp.Controllers
             return Json(credito);
         }
 
+        [HttpPost]
+        public JsonResult EvalSimulacion(int productoId, decimal montoSolicitado, int cantidadCuotas)
+        {
+            decimal ctf = 0;
+            decimal montoCuota = 0;
+
+            if (montoSolicitado > 0 && cantidadCuotas > 0)
+            {
+                //Solo rescatar los que se pueden ver en linsea
+                var producto = _context.Productos
+                    .Where(x => x.Id == productoId)
+                    .Include(p => p.Terminos)
+                    .FirstOrDefault(c => c.Beneficios.SolicitudEnLinea);
+
+                //Verificar que existe producto
+                if (producto != null)
+                {
+                    //Se cambia la tasa efectiva de Decimal a Double, porque la funcion que calcula potencia no soporta decimal
+                    var mensual = (montoSolicitado * ((producto.Terminos.TasaNominal + producto.Terminos.TasaGastosCobranza + producto.Terminos.TasaSeguros) / 100) * cantidadCuotas);
+                    var unico = (montoSolicitado * (producto.Terminos.TasaGastosAdministrativos / 100));
+                    //montoCuota = Math.Round((((montoSolicitado * interesEfectivoMensual) + (montoSolicitado * terminos.TasaGastosAdministrativos) + (montoSolicitado * terminos.TasaGastosAdministrativos * cantidadCuotas) + (montoSolicitado * terminos.TasaSeguros * cantidadCuotas)) / cantidadCuotas), 2);
+                    montoCuota = Math.Round(((montoSolicitado + unico + mensual) / cantidadCuotas), 2);
+                    //ctf = Math.Round((((montoCuota*cantidadCuotas) - montoSolicitado)/cantidadCuotas)/100, 3);
+                    ctf = Math.Round(((unico + mensual) / montoSolicitado) * 100, 3);
+                }
+            }
+
+            SolicitudPrestamo credito = new SolicitudPrestamo
+            {
+                CostoTotalFinanciero = ctf,
+                ValorCuota = montoCuota
+            };
+
+            return Json(credito);
+        }
     }
 }
