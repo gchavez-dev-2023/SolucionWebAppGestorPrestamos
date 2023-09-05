@@ -1,4 +1,4 @@
-﻿@model User
+﻿@model WebApp.Dtos.UserDto
 @{
     ViewData["Title"] = "CREATE USER";
 }
@@ -19,6 +19,11 @@
     <div class="form-group">
         <label asp-for="Password"></label>
         <input asp-for="Password" class="form-control" />
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="EmailConfirmed" /> @Html.DisplayNameFor(model => model.EmailConfirmed)
+        </label>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>

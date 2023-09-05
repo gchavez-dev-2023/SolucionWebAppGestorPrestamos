@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Data;
-using WebApp.Models;
+using WebApp.Dtos;
 
 namespace WebApp.Controllers
 {
@@ -25,14 +25,15 @@ namespace WebApp.Controllers
         public ViewResult Create() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Create(UserDto user)
         {
             if (ModelState.IsValid)
             {
                 IdentityUser appUser = new IdentityUser
                 {
                     UserName = user.Name,
-                    Email = user.Email
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);
@@ -58,20 +59,30 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id, string email, string password)
+        public async Task<IActionResult> Edit(string id, string email, string password, bool emailConfirmed)
         {
             IdentityUser user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 if (!string.IsNullOrEmpty(email))
+                {
                     user.Email = email;
+                }
                 else
+                {
                     ModelState.AddModelError("", "Email cannot be empty");
+                }
 
                 if (!string.IsNullOrEmpty(password))
+                {
                     user.PasswordHash = _passwordHasher.HashPassword(user, password);
+                }
                 else
+                {
                     ModelState.AddModelError("", "Password cannot be empty");
+                }
+
+                user.EmailConfirmed = emailConfirmed;
 
                 if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
                 {

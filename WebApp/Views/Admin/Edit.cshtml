@@ -7,7 +7,7 @@
 <a asp-action="Index" class="btn btn-secondary">Back</a>
 <div asp-validation-summary="All" class="text-danger"></div>
 
-<form asp-action="Update" method="post">
+<form asp-action="Edit" method="post">
     <div class="form-group">
         <label asp-for="Id"></label>
         <input asp-for="Id" class="form-control" disabled />
@@ -19,6 +19,11 @@
     <div class="form-group">
         <label for="password">Password</label>
         <input name="password" class="form-control" />
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="EmailConfirmed" /> @Html.DisplayNameFor(model => model.EmailConfirmed)
+        </label>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>

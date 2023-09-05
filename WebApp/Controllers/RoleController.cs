@@ -11,7 +11,7 @@ using WebApp.Dtos;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR")]
+    //[Authorize(Roles = "ADMINISTRADOR")]
     public class RoleController : Controller
     {
         private readonly ApplicationDbContext _context;
