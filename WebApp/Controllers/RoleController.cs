@@ -1,23 +1,27 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Xml.Linq;
 using WebApp.Data;
-using WebApp.Models;
+using WebApp.Dtos;
 
 namespace WebApp.Controllers
 {
+    [Authorize(Roles = "ADMINISTRADOR")]
     public class RoleController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private RoleManager<IdentityRole> roleManager;
-        private UserManager<IdentityUser> userManager;
-        public RoleController(ApplicationDbContext context, RoleManager<IdentityRole> roleMgr, UserManager<IdentityUser> userMrg)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        public RoleController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            roleManager = roleMgr;
-            userManager = userMrg;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         //public ViewResult Index() => View(roleManager.Roles);
@@ -72,44 +76,24 @@ namespace WebApp.Controllers
             {
                 ModelState.AddModelError("", "No role found");
             }
-            return View("Index", roleManager.Roles);
+            return View("Index", _roleManager.Roles);
 
-            /*IdentityRole role = await roleManager.FindByIdAsync(id);
-            if (role != null)
-            {
-                IdentityResult result = await roleManager.DeleteAsync(role);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index");
-                }                    
-                else
-                {
-                    Errors(result);
-                }                    
-            }
-            else
-            {
-                ModelState.AddModelError("", "No role found");
-            }
-
-            return View("Index", roleManager.Roles);*/
         }
 
-        public async Task<IActionResult> Update(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             var role = await _context.Roles.FindAsync(id);
             var users = await _context.Users.ToListAsync();
-            //IdentityRole role = await roleManager.FindByIdAsync(id);
+
             List<IdentityUser> members = new List<IdentityUser>();
             List<IdentityUser> nonMembers = new List<IdentityUser>();
-            //foreach (IdentityUser user in userManager.Users)
+
             foreach (IdentityUser user in users)
             {
-                //var list = await userManager.IsInRoleAsync(user, role.Name) ? members : nonMembers;
                 var list = await _context.UserRoles.AnyAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id) ? members : nonMembers;
                 list.Add(user);
             }
-            return View(new RoleEdit
+            return View(new RoleEditDto
             {
                 Role = role,
                 Members = members,
@@ -118,45 +102,49 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(RoleModification model)
+        public async Task<IActionResult> Edit(RoleModificationDto model)
         {
             IdentityResult result;
             if (ModelState.IsValid)
             {
                 foreach (string userId in model.AddIds ?? new string[] { })
                 {
-                    //var user = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userId);
-                    IdentityUser user = await userManager.FindByIdAsync(userId);
-
-                    if (user != null)
+                    bool existeUsuarioRol = await _context.UserRoles
+                        .FirstOrDefaultAsync(ur => ur.UserId == userId 
+                                          && ur.RoleId == model.RoleId) == null ? false : true;
+                    if (!existeUsuarioRol)
                     {
-                        /*user.RoleId = model.RoleName;
-
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
-                        */
-                        
-                        result = await userManager.AddToRoleAsync(user, model.RoleName);
-                        if (!result.Succeeded)
+                        var user = await _context.Users.FirstOrDefaultAsync(ur => ur.Id == userId);
+                        if (user != null)
                         {
-                            Errors(result);
-                        }       
+                            var rol = await _context.Roles.FirstOrDefaultAsync(ur => ur.Id == model.RoleId);
+                            if (rol != null)
+                            {
+                                //Constuir un UsuarioRol
+                                _context.Add(new IdentityUserRole<string>
+                                {
+                                    RoleId = rol.Id,
+                                    UserId = user.Id
+                                });
+
+                                await _context.SaveChangesAsync();
+
+                            }
+                        }
+
                     }
                 }
+
                 foreach (string userId in model.DeleteIds ?? new string[] { })
                 {
-                    IdentityUser user = await userManager.FindByIdAsync(userId);
-                    //var user = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userId);
+                    IdentityUser user = await _userManager.FindByIdAsync(userId);
                     if (user != null)
                     {
-                        /*_context.UserRoles.Remove(user);
-                         await _context.SaveChangesAsync();
-                        */
-                        result = await userManager.RemoveFromRoleAsync(user, model.RoleName);
+                        result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
                         if (!result.Succeeded)
                         {
                             Errors(result);
-                        }                          
+                        }
                     }
                 }
             }
@@ -164,11 +152,11 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 return RedirectToAction(nameof(Index));
-            }                
+            }
             else
             {
-                return await Update(model.RoleId);
-            }                
+                return await Edit(model.RoleId);
+            }
         }
     }
 }

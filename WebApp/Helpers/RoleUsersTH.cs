@@ -6,13 +6,13 @@ namespace WebApp.Helpers
     [HtmlTargetElement("td", Attributes = "i-role")]
     public class RoleUsersTH : TagHelper
     {
-        private UserManager<IdentityUser> userManager;
-        private RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RoleUsersTH(UserManager<IdentityUser> usermgr, RoleManager<IdentityRole> rolemgr)
+        public RoleUsersTH(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            userManager = usermgr;
-            roleManager = rolemgr;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [HtmlAttributeName("i-role")]
@@ -21,12 +21,12 @@ namespace WebApp.Helpers
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             List<string> names = new List<string>();
-            IdentityRole role = await roleManager.FindByIdAsync(Role);
+            IdentityRole role = await _roleManager.FindByIdAsync(Role);
             if (role != null)
             {
-                foreach (var user in userManager.Users)
+                foreach (var user in _userManager.Users)
                 {
-                    if (user != null && await userManager.IsInRoleAsync(user, role.Name))
+                    if (user != null && await _userManager.IsInRoleAsync(user, role.Name))
                         names.Add(user.UserName);
                 }
             }

@@ -27,22 +27,24 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (User.IsInRole ("ADMINISTRADOR")){
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Configuraciones Cliente
                             </a>
-                            <ul class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="" asp-controller="ClientesDto" asp-action="Index">Clientes DTO</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Personas" asp-action="Index">Personas</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Generos" asp-action="Index">Generos</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Nacionalidades" asp-action="Index">Nacionalidades</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="EstadosCivil" asp-action="Index">Estados Civil</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Conyuges" asp-action="Index">Conyuges</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="OrigenesIngresoCliente" asp-action="Index">Origenes Ingreso Cliente</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="TiposActividad" asp-action="Index">Tipos Actividad</a>
-                            </ul>
-                        </li>
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="" asp-controller="ClientesDto" asp-action="Index">Clientes DTO</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Personas" asp-action="Index">Personas</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Generos" asp-action="Index">Generos</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Nacionalidades" asp-action="Index">Nacionalidades</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="EstadosCivil" asp-action="Index">Estados Civil</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Conyuges" asp-action="Index">Conyuges</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="OrigenesIngresoCliente" asp-action="Index">Origenes Ingreso Cliente</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="TiposActividad" asp-action="Index">Tipos Actividad</a>
+                                </ul>
+                            </li>
+                        }
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Configuraciones Producto

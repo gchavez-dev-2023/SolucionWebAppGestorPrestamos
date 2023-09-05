@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.Models
+namespace WebApp.Dtos
 {
-    public class RoleModification
+    public class RoleModificationDto
     {
         [Required]
         public string RoleName { get; set; }
+
         public string RoleId { get; set; }
+
         public string[]? AddIds { get; set; }
+
         public string[]? DeleteIds { get; set; }
     }
 }

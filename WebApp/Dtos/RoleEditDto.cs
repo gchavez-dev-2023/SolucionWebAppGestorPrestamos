@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace WebApp.Models
+namespace WebApp.Dtos
 {
-    public class RoleEdit
+    public class RoleEditDto
     {
 
         public IdentityRole Role { get; set; }
