@@ -19,7 +19,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <ul class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -29,6 +29,15 @@
                         </li>
                         @if (User.IsInRole("SUPERUSER") )
                         {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Usuarios/Roles
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Index">Usuarios</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
+                                </ul>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Configuraciones Cliente
@@ -81,37 +90,34 @@
                                 </ul>
                             </li>
                         }
-                        @if ( User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE") || User.IsInRole("COLABORADOR"))
+                        @if (User.IsInRole("ADMINISTRADOR"))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Configuraciones Cliente
+                                    Usuarios/Roles
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="" asp-controller="ClientesDto" asp-action="Index">Clientes</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Index">Usuarios</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
                                 </ul>
+                            </li>
+                        }
+                        @if ( User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE") || User.IsInRole("COLABORADOR"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ClientesDto" asp-action="Index">Clientes</a>
                             </li>
                         }
                         @if (User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE"))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Configuraciones Producto
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="" asp-controller="ProductosDto" asp-action="Index">Productos</a>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ProductosDto" asp-action="Index">Productos</a>
                             </li>
                         }
                         @if (User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE") || User.IsInRole("COLABORADOR"))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Configuraciones Solicitudes
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="" asp-controller="SolicitudesPrestamoDto" asp-action="Index">Solicitudes Prestamo</a>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="SolicitudesPrestamoDto" asp-action="Index">Solicitudes Prestamo</a>
                             </li>
                         }
                     </ul>

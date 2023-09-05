@@ -25,7 +25,7 @@ if (architectureFolder == "x_64") //Solo paquetes 64 bit
 }
 else
 {
-    Console.WriteLine("DinktoPDF no es soportado para la versión del Sistema Operativo");
+    Console.WriteLine("DinktoPDF no es soportado para la versiï¿½n del Sistema Operativo");
 }
 
 var wkHtmlToPdfPath = Path.Combine(
@@ -64,9 +64,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddRoles<IdentityRole>() //Se agrega para realizar la administración de roles
+                .AddRoles<IdentityRole>() //Se agrega para realizar la administraciï¿½n de roles
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 

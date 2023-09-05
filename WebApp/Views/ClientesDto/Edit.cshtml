@@ -182,7 +182,7 @@
         function Refresh() {
             $.ajax({
                 type: "POST",
-                url: "/EstadosCivil/RequiereDatosConyuge",
+                url: "/Validator/RequiereDatosConyuge",
                 dataType: 'json',
                 data: { "estadoCivilId": $("#EstadoCivilId").val() },
                 success: function (response) {

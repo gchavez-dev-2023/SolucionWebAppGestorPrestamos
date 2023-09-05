@@ -137,7 +137,7 @@
         function RefreshProducto() {
             $.ajax({
                 type: "POST",
-                url: "/Productos/EvalProducto",
+                url: "/Validator/EvalProducto",
                 dataType: 'json',
                 data: { "productoId": $("#ProductoId").val() },
                 success: function (response) {
@@ -164,7 +164,7 @@
         function RefreshCliente() {
             $.ajax({
                 type: "POST",
-                url: "/Clientes/EvalCliente",
+                url: "/Validator/EvalCliente",
                 dataType: 'json',
                 data: { "clienteId": $("#ClienteId").val() },
                 success: function (response) {
@@ -187,7 +187,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Productos/GetCTFyValorCuota",
+                url: "/Validator/GetCTFyValorCuota",
                 dataType: 'json',
                 data: {
                     "productoId": $("#ProductoId").val()

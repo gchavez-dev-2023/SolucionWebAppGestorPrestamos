@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using WebApp.Data;
 using WebApp.Dtos;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+
+    [Authorize(Roles = "SUPERUSER,ADMINISTRADOR,GERENTE,COLABORADOR")]
     public class ClientesDtoController : Controller
     {
         private readonly ApplicationDbContext _context;

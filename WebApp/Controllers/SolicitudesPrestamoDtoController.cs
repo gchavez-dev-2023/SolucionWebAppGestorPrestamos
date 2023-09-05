@@ -1,8 +1,10 @@
 ﻿using DinkToPdf;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Data;
 using WebApp.Data;
 using WebApp.Dtos;
 using WebApp.Helpers;
@@ -10,6 +12,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [Authorize(Roles = "SUPERUSER,ADMINISTRADOR,GERENTE,COLABORADOR")]
     public class SolicitudesPrestamoDtoController : Controller
     {
         private readonly ApplicationDbContext _context;
