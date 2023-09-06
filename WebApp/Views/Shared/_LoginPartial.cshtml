@@ -6,7 +6,43 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+
+                @if (User.IsInRole("SUPERUSER"))
+                {
+                    <div style="color:white; background-color:green">
+                        Hello @User.Identity?.Name!
+                    </div>
+                }
+                else
+                {
+                    if (User.IsInRole("ADMINISTRADOR"))
+                    {
+                        <div style="color:white;background-color:red">
+                            Hello @User.Identity?.Name!
+                        </div>
+                    }
+                    else
+                    {
+                        @if (User.IsInRole("GERENTE"))
+                        {
+                            <div style="color:white;background-color:black">
+                                Hello @User.Identity?.Name!
+                            </div>
+                        }
+                        else
+                        {
+                            @if (User.IsInRole("COLABORADOR"))
+                            {
+                                <div style="color:white; background-color:purple">
+                                    Hello @User.Identity?.Name!
+                                </div>
+                            }
+                        }
+                    }
+
+                }
+            </a>
     </li>
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

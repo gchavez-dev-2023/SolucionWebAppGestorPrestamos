@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using WebApp.Data;
 using WebApp.Dtos;
@@ -22,7 +23,40 @@ namespace WebApp.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.Users);
+            var usersDto = new List<UserDto>();
+
+            var users = _context.Users.ToList();
+            foreach (var user in users)
+            {
+                var userDto = new UserDto();
+                userDto.Id = user.Id;
+                userDto.UserName = user.UserName;
+                userDto.Email = user.Email;
+                userDto.EmailConfirmed = user.EmailConfirmed;
+                userDto.PhoneNumber = user.PhoneNumber;
+                var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
+                bool usuarioPermitido = true;
+                if (userRol != null)
+                {
+                    var rol = _context.Roles.FirstOrDefault(p => p.Id == userRol.RoleId);
+                    if (User.IsInRole("ADMINISTRADOR") && rol.Name == "SUPERUSER")
+                    {
+                        usuarioPermitido = false;
+                    }
+                    else
+                    {
+                        userDto.RoleDto = new RoleDto();
+                        userDto.RoleDto.Id = rol.Id;
+                        userDto.RoleDto.Name = rol.Name;
+                    }
+                }
+                if (usuarioPermitido)
+                {
+                    usersDto.Add(userDto);
+                }
+            }
+
+            return View(usersDto);
         }
 
         public ViewResult Create() => View();
@@ -34,9 +68,10 @@ namespace WebApp.Controllers
             {
                 IdentityUser appUser = new IdentityUser
                 {
-                    UserName = user.Name,
+                    UserName = user.UserName,
                     Email = user.Email,
                     EmailConfirmed = user.EmailConfirmed,
+                    PhoneNumber = user.PhoneNumber,
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);

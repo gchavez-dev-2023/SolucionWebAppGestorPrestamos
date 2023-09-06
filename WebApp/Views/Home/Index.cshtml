@@ -64,23 +64,20 @@
     }
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            //On Change
-            $('#ProductoId').change(function () {
-                calcularCuota();
-            });
-            //On Change
-            $('#MontoSolicitado').change(function () {
-                calcularCuota();
-            });
-            //On Change
-            $('#CantidadCuotas').change(function () {
-                calcularCuota();
-            });
-        });
+        var productoVal = document.getElementById("ProductoId");
+        productoVal.addEventListener("change", CalcularCuota);
+        CalcularCuota();
+
+        var montoSolicitado = document.getElementById("MontoSolicitado");
+        montoSolicitado.addEventListener("change", CalcularCuota);
+        CalcularCuota();
+
+        var cantidadCuotas = document.getElementById("CantidadCuotas");
+        cantidadCuotas.addEventListener("change", CalcularCuota);
+        CalcularCuota();
 
         //Funcion Calcular Cuota
-        function calcularCuota() {
+        function CalcularCuota() {
             var montoSolicitado = parseFloat($("#MontoSolicitado").val());
             var cantidadCuotas = parseInt($("#CantidadCuotas").val());
 
