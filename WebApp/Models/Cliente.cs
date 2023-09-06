@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Models
@@ -21,8 +22,11 @@ namespace WebApp.Models
         public string DomicilioAlternativo { get; set; } = null!;
 
         public int TelefonoLaboral { get; set; }
+
+        [DisplayName("Persona Politicamente Expuesta")]
         public bool PersonaPoliticamenteExpuesta { get; set; }
-        
+
+        [DisplayName("Estado Civil")]
         public int EstadoCivilId { get; set; }
         public int Scoring { get; set; }
         public string UrlDocumento { get; set; } = null!;

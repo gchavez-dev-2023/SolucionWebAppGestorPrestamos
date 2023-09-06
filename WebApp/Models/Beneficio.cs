@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace WebApp.Models
 {
@@ -12,6 +13,8 @@ namespace WebApp.Models
 
         public int Id { get; set; }
         public bool Aprobacion24Horas { get; set; }
+
+        [DisplayName("¿Se puede solicitar en linea?")]
         public bool SolicitudEnLinea { get; set; }
 
         public virtual ICollection<Producto> Productos { get; set; }

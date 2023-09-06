@@ -7,6 +7,8 @@ namespace WebApp.Dtos
 {
     public class ProductoDto
     {
+
+        [DisplayName("Producto")]
         public int Id { get; set; }
 
         [StringLength(100, MinimumLength = 3)]
@@ -65,26 +67,36 @@ namespace WebApp.Dtos
 
         [Required]
         [DisplayName("Tasa Nominal")]
+        [Range(0, 100)]
+        [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(6, 3)")]
         public decimal TasaNominal { get; set; }
 
         [Required]
         [DisplayName("Tasa Gastos Contratación")]
+        [Range(0, 100)]
+        [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(6, 3)")]
         public decimal TasaGastosAdministrativos { get; set; }
 
         [Required]
         [DisplayName("Tasa Gastos Admin. Mensual")]
+        [Range(0, 100)]
+        [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(6, 3)")]
         public decimal TasaGastosCobranza { get; set; }
 
         [Required]
         [DisplayName("Tasa Seguros Mensual")]
+        [Range(0, 100)]
+        [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(6, 3)")]
         public decimal TasaSeguros { get; set; }
 
         [Required]
         [DisplayName("Tasa Interes Mora Diario")]
+        [Range(0, 1000)]
+        [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(6, 3)")]
         public decimal TasaInteresMora { get; set; }
 
@@ -100,10 +112,14 @@ namespace WebApp.Dtos
 
         [Required]
         [DisplayName("Tasa Cobertura Aval")]
+        [Range(0, 100)]
+        [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(6, 3)")]
         public decimal TasaCoberturaAval { get; set; }
         [Required]
         [DisplayName("Tasa Cobertura Conyuge")]
+        [Range(0, 100)]
+        [DataType(DataType.Currency)]
         public decimal TasaCoberturaConyuge { get; set; }
         [Required]
         [DisplayName("Fecha Inicio Vigencia")]

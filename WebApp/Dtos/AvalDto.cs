@@ -7,6 +7,7 @@ namespace WebApp.Dtos
 {
     public class AvalDto
     {
+
         public int Id { get; set; }
         //Datos Persona-Aval
         public int PersonaId { get; set; }
@@ -37,6 +38,7 @@ namespace WebApp.Dtos
         [Required]
         [Column(TypeName = "nvarchar(200)")]
         [DisplayName("Domicilio")]
+
         public string Domicilio { get; set; } = null!;
         [StringLength(200, MinimumLength = 3)]
         [Required]

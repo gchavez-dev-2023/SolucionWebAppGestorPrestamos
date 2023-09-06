@@ -7,6 +7,8 @@ namespace WebApp.Dtos
 {
     public class ClienteDto
     {
+
+        [DisplayName("Cliente")]
         public int Id { get; set; }
 
         //Datos Persona-Cliente
