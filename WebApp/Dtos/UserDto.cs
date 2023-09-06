@@ -4,7 +4,7 @@ namespace WebApp.Dtos
 {
     public class UserDto
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
         public string UserName { get; set; }
@@ -19,9 +19,10 @@ namespace WebApp.Dtos
         [Required]
         public bool EmailConfirmed { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
-        public RoleDto RoleDto { get; set; }
+        public string? RoleId { get; set; }
+        public RoleDto? RoleDto { get; set; }
 
     }
 }

@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Data;
 using WebApp.Data;
 using WebApp.Dtos;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
@@ -34,6 +37,7 @@ namespace WebApp.Controllers
                 userDto.Email = user.Email;
                 userDto.EmailConfirmed = user.EmailConfirmed;
                 userDto.PhoneNumber = user.PhoneNumber;
+                userDto.RoleDto = new RoleDto();
                 var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
                 bool usuarioPermitido = true;
                 if (userRol != null)
@@ -45,7 +49,6 @@ namespace WebApp.Controllers
                     }
                     else
                     {
-                        userDto.RoleDto = new RoleDto();
                         userDto.RoleDto.Id = rol.Id;
                         userDto.RoleDto.Name = rol.Name;
                     }
@@ -59,81 +62,149 @@ namespace WebApp.Controllers
             return View(usersDto);
         }
 
-        public ViewResult Create() => View();
+        public ViewResult Create()
+        {
+            if (User.IsInRole("ADMINISTRADOR")){
+                ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name");
+            }
+            else {
+                ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
+            }
+            
+            return View();
+        } 
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserDto user)
+        public async Task<IActionResult> Create([Bind("Id,UserName,Email,Password,EmailConfirmed,PhoneNumber,RoleId")] UserDto userDto)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser appUser = new IdentityUser
+                IdentityUser user = new IdentityUser
                 {
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    EmailConfirmed = user.EmailConfirmed,
-                    PhoneNumber = user.PhoneNumber,
+                    UserName = userDto.UserName,
+                    Email = userDto.Email,
+                    EmailConfirmed = userDto.EmailConfirmed,
+                    PhoneNumber = userDto.PhoneNumber,
                 };
 
-                IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);
+                IdentityResult result = await _userManager.CreateAsync(user, userDto.Password);
 
                 if (result.Succeeded)
+                {
+                    //Constuir un UsuarioRol
+                    _context.Add(new IdentityUserRole<string>
+                    {
+                        RoleId = userDto.RoleId,
+                        UserId = user.Id
+                    });
+                    await _context.SaveChangesAsync();
+
                     return RedirectToAction("Index");
+                }                    
                 else
                 {
                     foreach (IdentityError error in result.Errors)
+                    {
                         ModelState.AddModelError("", error.Description);
+                    }
                 }
             }
-            return View(user);
+            return View(userDto);
         }
 
         public async Task<IActionResult> Edit(string id)
         {
             IdentityUser user = await _userManager.FindByIdAsync(id);
+
             if (user != null)
-                return View(user);
+            {
+                var userDto = new UserDto();
+                userDto.Id = user.Id;
+                userDto.UserName = user.UserName;
+                userDto.Email = user.Email;
+                userDto.EmailConfirmed = user.EmailConfirmed;
+                userDto.PhoneNumber = user.PhoneNumber;
+                userDto.RoleDto = new RoleDto();
+                var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
+                if (userRol != null)
+                {
+                        userDto.RoleDto.Id = userRol.RoleId;                    
+                }
+
+                if (User.IsInRole("ADMINISTRADOR"))
+                {
+                    ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name");
+                }
+                else
+                {
+                    ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
+                }
+
+                return View(userDto);
+            }
             else
+            {
                 return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id, string email, string password, bool emailConfirmed)
+        public async Task<IActionResult> Edit([Bind("Id,UserName,Email,Password,EmailConfirmed,PhoneNumber,RoleId")] UserDto userDto)
         {
-            IdentityUser user = await _userManager.FindByIdAsync(id);
-            if (user != null)
+
+            if (User.IsInRole("ADMINISTRADOR"))
             {
-                if (!string.IsNullOrEmpty(email))
-                {
-                    user.Email = email;
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Email cannot be empty");
-                }
-
-                if (!string.IsNullOrEmpty(password))
-                {
-                    user.PasswordHash = _passwordHasher.HashPassword(user, password);
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Password cannot be empty");
-                }
-
-                user.EmailConfirmed = emailConfirmed;
-
-                if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
-                {
-                    IdentityResult result = await _userManager.UpdateAsync(user);
-                    if (result.Succeeded)
-                        return RedirectToAction("Index");
-                    else
-                        Errors(result);
-                }
+                ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name");
             }
             else
-                ModelState.AddModelError("", "User Not Found");
-            return View(user);
+            {
+                ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
+            }
+
+            if (ModelState.IsValid)
+            {
+
+                IdentityUser user = await _userManager.FindByIdAsync(userDto.Id);
+                if (user != null)
+                {
+                    user.Email = userDto.Email;
+                    user.PasswordHash = _passwordHasher.HashPassword(user, userDto.Password);
+                    user.EmailConfirmed = userDto.EmailConfirmed;
+
+                    IdentityResult result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
+                        if (userRol != null && userRol.RoleId != userDto.RoleId)
+                        {
+                            //Modificar Rol de un usuario
+                            userRol.RoleId = userDto.RoleId;
+                            _context.Update(userRol);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            //Constuir un UsuarioRol
+                            _context.Add(new IdentityUserRole<string>
+                            {
+                                RoleId = userDto.RoleId,
+                                UserId = user.Id
+                            });
+                            await _context.SaveChangesAsync();
+                        }
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        Errors(result);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "User Not Found");
+                }
+            }
+            return View(userDto);
         }
 
         [HttpPost]
@@ -144,19 +215,27 @@ namespace WebApp.Controllers
             {
                 IdentityResult result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
+                {
                     return RedirectToAction("Index");
+                }
                 else
+                {
                     Errors(result);
+                }
             }
             else
+            {
                 ModelState.AddModelError("", "User Not Found");
+            }
             return View("Index", _userManager.Users);
         }
 
         private void Errors(IdentityResult result)
         {
             foreach (IdentityError error in result.Errors)
+            {
                 ModelState.AddModelError("", error.Description);
+            }
         }
     }
 }

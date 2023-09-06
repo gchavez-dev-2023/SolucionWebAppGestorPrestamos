@@ -45,17 +45,7 @@ namespace WebApp.Controllers
                 //Cambiar por modelo nuevo, con patron singelton
                 _context.Add(new IdentityRole(name));
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-
-                //IdentityResult result = await _context.Roles.CreateAsync(new IdentityRole(name));
-                /*if (result.Succeeded)
-                {
-                    return RedirectToAction("Index");
-                }                    
-                else
-                {
-                    Errors(result);
-                }*/                    
+                return RedirectToAction(nameof(Index));    
             }
             return View(name);
         }
