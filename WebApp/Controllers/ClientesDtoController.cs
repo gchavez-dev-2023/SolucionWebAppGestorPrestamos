@@ -23,7 +23,7 @@ namespace WebApp.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Clientes.Include(c => c.EstadoCivil).Include(c => c.Persona);
+            var applicationDbContext = _context.Clientes.Include(c => c.EstadoCivil).Include(c => c.Persona).OrderByDescending(s => s.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -450,45 +450,79 @@ namespace WebApp.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Clientes'  is null.");
             }
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await _context.Clientes
+                .Include(c => c.Persona)
+                .Include(c => c.OrigenesIngresoClientes)
+                .Include(c => c.EstadoCivil)
+                .Include(c => c.Conyuges)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            //Eliminar Cliente, OrigenesIngresoCliente, Conyuges
+            _context.Clientes.Remove(cliente);
+            await _context.SaveChangesAsync();
+
             if (cliente != null)
             {
-                _context.Clientes.Remove(cliente);
-                await _context.SaveChangesAsync();
-            }
-            var personaCliente = await _context.Personas.FindAsync(cliente.PersonaId);
-            if (personaCliente != null)
-            {
-                _context.Personas.Remove(personaCliente);
-                await _context.SaveChangesAsync();
-            }
-
-            var origenIngresoCliente = await _context.OrigenesIngresoCliente.FindAsync(cliente.OrigenesIngresoClientes.FirstOrDefault().Id);
-            if (origenIngresoCliente != null)
-            {
-                _context.OrigenesIngresoCliente.Remove(origenIngresoCliente);
-                await _context.SaveChangesAsync();
-            }
-
-            //evaluar Estado Civil
-            var estadoCivil = await _context.EstadosCivil
-            .FirstOrDefaultAsync(m => m.Id == cliente.EstadoCivilId);
-            bool requiereDatosConyuge = estadoCivil.RequiereDatosConyuge;
-            if (requiereDatosConyuge)
-            {
-                var conyuge = await _context.Conyuges.FindAsync(cliente.Conyuges.FirstOrDefault().Id);
-                if (cliente != null)
+                //evaluar Estado Civil
+                if (cliente.EstadoCivil.RequiereDatosConyuge)
                 {
-                    _context.Conyuges.Remove(conyuge);
+                    //Eliminar Personas Conyuge
+                    foreach (var conyuge in cliente.Conyuges)
+                    {
+                        var personaConyuge = await _context.Personas.FindAsync(conyuge.PersonaId);
+
+                        if (personaConyuge != null)
+                        {
+                            _context.Personas.Remove(personaConyuge);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+
+                //Eliminar Persona Cliente
+                var personaCliente = await _context.Personas.FindAsync(cliente.PersonaId);
+                if (personaCliente != null)
+                {
+                    _context.Personas.Remove(personaCliente);
                     await _context.SaveChangesAsync();
                 }
-                var personaConyuge = await _context.Personas.FindAsync(conyuge.PersonaId);
-                if (personaConyuge != null)
-                {
-                    _context.Personas.Remove(personaConyuge);
-                    await _context.SaveChangesAsync();
-                }
+
             }
+
+            //var personaCliente = await _context.Personas.FindAsync(cliente.PersonaId);
+            //if (personaCliente != null)
+            //{
+            //    _context.Personas.Remove(personaCliente);
+            //    await _context.SaveChangesAsync();
+            //}
+
+            //var origenIngresoCliente = await _context.OrigenesIngresoCliente.FirstOrDefaultAsync(x => x.ClienteId == id);
+            //if (origenIngresoCliente != null)
+            //{
+            //    _context.OrigenesIngresoCliente.Remove(origenIngresoCliente);
+            //    await _context.SaveChangesAsync();
+            //}
+
+            ////evaluar Estado Civil
+            //var estadoCivil = await _context.EstadosCivil
+            //.FirstOrDefaultAsync(m => m.Id == cliente.EstadoCivilId);
+            //bool requiereDatosConyuge = estadoCivil.RequiereDatosConyuge;
+            //if (requiereDatosConyuge)
+            //{
+            //    var conyuge = await _context.Conyuges.FindAsync(cliente.Conyuges.FirstOrDefault().Id);
+            //    if (cliente != null)
+            //    {
+            //        _context.Conyuges.Remove(conyuge);
+            //        await _context.SaveChangesAsync();
+            //    }
+
+            //    var personaConyuge = await _context.Personas.FindAsync(conyuge.PersonaId);
+            //    if (personaConyuge != null)
+            //    {
+            //        _context.Personas.Remove(personaConyuge);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //}
 
             return RedirectToAction(nameof(Index));
         }

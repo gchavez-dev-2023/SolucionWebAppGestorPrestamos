@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Productos.Include(p => p.Beneficios).Include(p => p.Requisitos).Include(p => p.Terminos);
+            var applicationDbContext = _context.Productos.Include(p => p.Beneficios).Include(p => p.Requisitos).Include(p => p.Terminos).OrderByDescending(s => s.Id);
             return View(await applicationDbContext.ToListAsync());
         }
 

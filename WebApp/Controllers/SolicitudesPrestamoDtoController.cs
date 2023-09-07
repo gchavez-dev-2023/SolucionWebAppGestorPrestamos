@@ -25,7 +25,8 @@ namespace WebApp.Controllers
         // GET: SolicitudesPrestamo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = await _context.SolicitudesPrestamo.Include(s => s.Cliente).Include(s => s.Producto).ToListAsync();
+            var applicationDbContext = await _context.SolicitudesPrestamo.Include(s => s.Cliente).Include(s => s.Producto).OrderByDescending(s => s.Id).ToListAsync();
+
             foreach (var item in applicationDbContext)
             {
                 item.Cliente.Persona = await _context.Personas.FirstOrDefaultAsync(x => x.Id == item.Cliente.PersonaId);
