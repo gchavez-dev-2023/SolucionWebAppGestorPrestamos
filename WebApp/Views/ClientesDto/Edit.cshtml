@@ -7,6 +7,7 @@
 <h1>Editar</h1>
 
 <h4>Cliente</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,7 +15,7 @@
             <div class="form-group">
                 <div class="btn-group" role="group" aria-label="Agrupar Botones">
                     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" id="Guardar" class="btn btn-primary">Guardar</button>
                 </div>
             </div>
 
@@ -64,7 +65,6 @@
                 <label asp-for="NacionalidadId" class="control-label"></label>
                 <select asp-for="NacionalidadId" class="form-control" asp-items="ViewBag.NacionalidadId"></select>
             </div>
-
             <div class="form-group">
                 <label asp-for="DomicilioAlternativo" class="control-label"></label>
                 <input asp-for="DomicilioAlternativo" class="form-control" />
@@ -80,11 +80,44 @@
                     <input class="form-check-input" asp-for="PersonaPoliticamenteExpuesta" /> @Html.DisplayNameFor(model => model.PersonaPoliticamenteExpuesta)
                 </label>
             </div>
+
+            <input type="hidden" asp-for="OrigenIngresoId" />
+            <div class="form-group">
+                <label asp-for="TipoActividadId" class="control-label"></label>
+                <select asp-for="TipoActividadId" class="form-control" asp-items="ViewBag.TipoActividadId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaInicioActividad" class="control-label"></label>
+                <input asp-for="FechaInicioActividad" class="form-control" />
+                <span asp-validation-for="FechaInicioActividad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFinActividad" class="control-label"></label>
+                <input asp-for="FechaFinActividad" class="form-control" />
+                <span asp-validation-for="FechaFinActividad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MontoLiquidoPercibido" class="control-label"></label>
+                <input asp-for="MontoLiquidoPercibido" class="form-control" />
+                <span asp-validation-for="MontoLiquidoPercibido" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Scoring" class="control-label"></label>
+                <input asp-for="Scoring" class="form-control" />
+                <span asp-validation-for="Scoring" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="EstadoCivilId" class="control-label"></label>
                 <select asp-for="EstadoCivilId" class="form-control" asp-items="ViewBag.EstadoCivilId"></select>
             </div>
+
+            <input type="hidden" asp-for="RequiereDatosConyuge" />
+
             <div class="col-md-6 conyuge-form" style="display: none">
+                <hr />
+                <h4>Datos Conyuge</h4>
+
                 <input type="hidden" asp-for="ConyugeId" />
                 <input type="hidden" asp-for="ConyugePersonaId" />
                 <div class="form-group">
@@ -130,33 +163,9 @@
                     <label asp-for="ConyugeNacionalidadId" class="control-label"></label>
                     <select asp-for="ConyugeNacionalidadId" class="form-control" asp-items="ViewBag.NacionalidadId"></select>
                 </div>
-            </div>
-            <input type="hidden" asp-for="OrigenIngresoId" />
-            <div class="form-group">
-                <label asp-for="TipoActividadId" class="control-label"></label>
-                <select asp-for="TipoActividadId" class="form-control" asp-items="ViewBag.TipoActividadId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaInicioActividad" class="control-label"></label>
-                <input asp-for="FechaInicioActividad" class="form-control" />
-                <span asp-validation-for="FechaInicioActividad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaFinActividad" class="control-label"></label>
-                <input asp-for="FechaFinActividad" class="form-control" />
-                <span asp-validation-for="FechaFinActividad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MontoLiquidoPercibido" class="control-label"></label>
-                <input asp-for="MontoLiquidoPercibido" class="form-control" />
-                <span asp-validation-for="MontoLiquidoPercibido" class="text-danger"></span>
+                <hr />
             </div>
 
-            <div class="form-group">
-                <label asp-for="Scoring" class="control-label"></label>
-                <input asp-for="Scoring" class="form-control" />
-                <span asp-validation-for="Scoring" class="text-danger"></span>
-            </div>
         </form>
     </div>
 </div>
@@ -170,7 +179,14 @@
         var divConyuge = document.getElementById("EstadoCivilId");
         divConyuge.addEventListener("change",Refresh);
         Refresh();
-        //Funcion Estado Civil
+
+        // Validar el Guardar
+        $("#Guardar").click(function (e) {
+            //alert("Pass all validation");
+            ValidateDefault();
+        });
+
+        //Funcion Activar Datos de Conyuge
         function Refresh() {
             $.ajax({
                 type: "POST",
@@ -178,12 +194,15 @@
                 dataType: 'json',
                 data: { "estadoCivilId": $("#EstadoCivilId").val() },
                 success: function (response) {
+                    $("#RequiereDatosConyuge").val(response.requiereDatosConyuge);
+                    
                     if (response.requiereDatosConyuge) {
                         $('.conyuge-form').show();
                     }
                     else {
                         $('.conyuge-form').hide();
                     }
+                    //alert("Refresh " + $("#RequiereDatosConyuge").val());
                 },
                 failure: function (response) {
                     alert("failure " + response.responseText);
@@ -192,6 +211,24 @@
                     alert("error " + response.responseText);
                 }
             });
+        }
+
+        //Funcion Validar Datos de Conyuge
+        function ValidateDefault() {
+            //alert("ValidateDefault " + $("#RequiereDatosConyuge").val());
+            //Tener cuidado el valor del bool se valida contra string "false"/"true"
+
+            if ($("#RequiereDatosConyuge").val() == "false") {
+                //alert("Pass no requiereDatosConyuge");
+                //Setear valores minimos
+                $("#ConyugeCedulaIdentidad").val("0123456");
+                $("#ConyugeNombre").val("...");
+                $("#ConyugeApellido").val("...");
+                $("#ConyugeFechaNacimiento").val('1980-01-01');
+                $("#ConyugeDomicilio").val("...");
+                $("#ConyugeCorreoElectronico").val("a@a.com");
+                $("#ConyugeTelefono").val("1909109209");
+                    }
         }
     </script>
 }

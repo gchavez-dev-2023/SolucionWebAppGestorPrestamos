@@ -15,13 +15,15 @@ namespace WebApp.Dtos
         public int ProductoId { get; set; }
         public ProductoDto? ProductoDto { get; set; }
 
-        [Required]
-        [DisplayName("Monto Solicitado")]
+        [Required(ErrorMessage = "Debe ingresar monto, valores permitidos entre 10.000,00 y 100.000.000,00")]
+        [Range(10000, 1000000000)]
         [DataType(DataType.Currency)]
+        [DisplayName("Monto Solicitado")]
         public decimal MontoSolicitado { get; set; }
 
-        [Required]
-        [DisplayName("Cantidad Cuotas")]
+        [Required(ErrorMessage = "Debe ingresar cantidad, valores permitidos entre 0 y 600")]
+        [Range(0, 600)]
+        [DisplayName("Plazo Minimo")]
         public int CantidadCuotas { get; set; }
 
         [Required]
@@ -34,13 +36,13 @@ namespace WebApp.Dtos
         [DataType(DataType.Currency)]
         public decimal CostoTotalFinanciero { get; set; }
 
-        [DisplayName("Tasa Cobertura Deuda Conyuge")]
         public decimal TasaCoberturaDeudaConyuge { get; set; }
 
         [Required]
         [DisplayName("Fecha de Solicitud")]
         [DataType(DataType.DateTime)]
         public DateTime FechaSolicitud { get; set; }
+
         public string UrlDocumento { get; set; } = null!;
 
         [Required]

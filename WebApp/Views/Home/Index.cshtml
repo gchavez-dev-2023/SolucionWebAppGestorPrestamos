@@ -15,92 +15,97 @@
     <br>
     <h1 class="display-4">Simulador de créditos</h1>
 </div>
-
-<form>
-    <div class="form-row">
-        <div class="row d-flex d-flex align-content-between flex-wrap">
-            <div class="col">
-                <div class="form-group">
-                    <label class="control-label" for="ProductoId">Producto Crédito</label>
-                    <select class="form-control" data-val="true" id="ProductoId" name="ProductoId" asp-items="ViewBag.ProductoId"></select>
+@if ((ViewBag.ProductoId as SelectList).Count() > 0)
+{
+    <form>
+        <div class="form-row">
+            <div class="row d-flex d-flex align-content-between flex-wrap">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label" for="ProductoId">Producto Crédito</label>
+                        <select class="form-control" data-val="true" id="ProductoId" name="ProductoId" asp-items="ViewBag.ProductoId"></select>
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label class="control-label" for="MontoSolicitado">Monto Solicitado</label>
-                    <input class="form-control" type="number" placeholder="Ingrese Monto." id="MontoSolicitado" name="MontoSolicitado" value="100000">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label" for="MontoSolicitado">Monto Solicitado</label>
+                        <input class="form-control" type="number" placeholder="Ingrese Monto." id="MontoSolicitado" name="MontoSolicitado" value="100000">
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label class="control-label" for="CantidadCuotas">Cantidad de Cuotas</label>
-                    <input class="form-control" type="number" placeholder="Ingrese Cantidad Cuotas." id="CantidadCuotas" name="CantidadCuotas" value="12">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label" for="CantidadCuotas">Cantidad de Cuotas</label>
+                        <input class="form-control" type="number" placeholder="Ingrese Cantidad Cuotas." id="CantidadCuotas" name="CantidadCuotas" value="12">
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label class="control-label" for="CostoTotalFinanciero">Costo Financiero Total</label>
-                    <input class="form-control" readonly="" type="number" id="CostoTotalFinanciero" name="CostoTotalFinanciero" value="0">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label" for="CostoTotalFinanciero">Costo Financiero Total</label>
+                        <input class="form-control" readonly="" type="number" id="CostoTotalFinanciero" name="CostoTotalFinanciero" value="0">
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label class="control-label" for="ValorCuota">Valor Cuota</label>
-                    <input class="form-control" readonly="" type="number" id="ValorCuota" name="ValorCuota" value="0">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label" for="ValorCuota">Valor Cuota</label>
+                        <input class="form-control" readonly="" type="number" id="ValorCuota" name="ValorCuota" value="0">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
 
-<div class="text-center">
-    <br />
-    <p>La presente Simulación no implica obligación para de otorgamiento de crédito simulado. La aprobación de crédito simulado queda sujeta a la verificación de antecedentes comerciales del Cliente y al cumplimiento de las políticas de crédito vigentes a la fecha de evaluación del Crédito.</p>
-</div>
+    <div class="text-center">
+        <br />
+        <p>La presente Simulación no implica obligación para de otorgamiento de crédito simulado. La aprobación de crédito simulado queda sujeta a la verificación de antecedentes comerciales del Cliente y al cumplimiento de las políticas de crédito vigentes a la fecha de evaluación del Crédito.</p>
+    </div>
+}
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script type="text/javascript">
-        var productoVal = document.getElementById("ProductoId");
-        productoVal.addEventListener("change", CalcularCuota);
-        CalcularCuota();
+    @if ((ViewBag.ProductoId as SelectList).Count() > 0)
+    {
+        <script type="text/javascript">
+            var productoVal = document.getElementById("ProductoId");
+            productoVal.addEventListener("change", CalcularCuota);
+            CalcularCuota();
 
-        var montoSolicitado = document.getElementById("MontoSolicitado");
-        montoSolicitado.addEventListener("change", CalcularCuota);
-        CalcularCuota();
+            var montoSolicitado = document.getElementById("MontoSolicitado");
+            montoSolicitado.addEventListener("change", CalcularCuota);
+            CalcularCuota();
 
-        var cantidadCuotas = document.getElementById("CantidadCuotas");
-        cantidadCuotas.addEventListener("change", CalcularCuota);
-        CalcularCuota();
+            var cantidadCuotas = document.getElementById("CantidadCuotas");
+            cantidadCuotas.addEventListener("change", CalcularCuota);
+            CalcularCuota();
 
-        //Funcion Calcular Cuota
-        function CalcularCuota() {
+            //Funcion Calcular Cuota
+            function CalcularCuota() {
             var montoSolicitado = parseFloat($("#MontoSolicitado").val());
             var cantidadCuotas = parseInt($("#CantidadCuotas").val());
 
             $.ajax({
-                type: "POST",
-                url: "/Validator/EvalSimulacion",
-                dataType: 'json',
-                data: { "productoId": $("#ProductoId").val()
-                      , "montoSolicitado": $("#MontoSolicitado").val()
-                      , "cantidadCuotas": $("#CantidadCuotas").val() 
-                },
-                success: function (response) {
-                    $("#CostoTotalFinanciero").val(response.costoTotalFinanciero);
-                    $("#ValorCuota").val(response.valorCuota);
-                },
-                failure: function (response) {
-                    alert("failure " + response.responseText);
-                },
-                error: function (response) {
-                    alert("error " + response.responseText);
-                }
+            type: "POST",
+            url: "/Validator/EvalSimulacion",
+            dataType: 'json',
+            data: { "productoId": $("#ProductoId").val()
+            , "montoSolicitado": $("#MontoSolicitado").val()
+            , "cantidadCuotas": $("#CantidadCuotas").val() 
+            },
+            success: function (response) {
+            $("#CostoTotalFinanciero").val(response.costoTotalFinanciero);
+            $("#ValorCuota").val(response.valorCuota);
+            },
+            failure: function (response) {
+            alert("failure " + response.responseText);
+            },
+            error: function (response) {
+            alert("error " + response.responseText);
+            }
             });
-        }
-    </script>
+            }
+        </script>
     }
+}
 

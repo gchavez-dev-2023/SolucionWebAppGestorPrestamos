@@ -21,7 +21,7 @@ namespace WebApp.Models
 
         public string DomicilioAlternativo { get; set; } = null!;
 
-        public int TelefonoLaboral { get; set; }
+        public string TelefonoLaboral { get; set; }
 
         [DisplayName("Persona Politicamente Expuesta")]
         public bool PersonaPoliticamenteExpuesta { get; set; }

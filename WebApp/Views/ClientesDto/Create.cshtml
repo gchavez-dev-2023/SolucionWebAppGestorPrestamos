@@ -77,11 +77,42 @@
                     <input class="form-check-input" asp-for="PersonaPoliticamenteExpuesta" /> @Html.DisplayNameFor(model => model.PersonaPoliticamenteExpuesta)
                 </label>
             </div>
+
+            <div class="form-group">
+                <label asp-for="TipoActividadId" class="control-label"></label>
+                <select asp-for="TipoActividadId" class="form-control" asp-items="ViewBag.TipoActividadId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaInicioActividad" class="control-label"></label>
+                <input asp-for="FechaInicioActividad" class="form-control" />
+                <span asp-validation-for="FechaInicioActividad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFinActividad" class="control-label"></label>
+                <input asp-for="FechaFinActividad" class="form-control" />
+                <span asp-validation-for="FechaFinActividad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MontoLiquidoPercibido" class="control-label"></label>
+                <input asp-for="MontoLiquidoPercibido" class="form-control" />
+                <span asp-validation-for="MontoLiquidoPercibido" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Scoring" class="control-label"></label>
+                <input asp-for="Scoring" class="form-control" />
+                <span asp-validation-for="Scoring" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="EstadoCivilId" class="control-label"></label>
                 <select asp-for="EstadoCivilId" class="form-control" asp-items="ViewBag.EstadoCivilId"></select>
             </div>
+
             <div class="col-md-6 conyuge-form" style="display: none">
+                <hr />
+                <h4>Datos Conyuge</h4>
+
                 <div class="form-group">
                     <label asp-for="ConyugeCedulaIdentidad" class="control-label"></label>
                     <input asp-for="ConyugeCedulaIdentidad" class="form-control" />
@@ -125,33 +156,9 @@
                     <label asp-for="ConyugeNacionalidadId" class="control-label"></label>
                     <select asp-for="ConyugeNacionalidadId" class="form-control" asp-items="ViewBag.NacionalidadId"></select>
                 </div>
+                <hr />
             </div>
 
-            <div class="form-group">
-                <label asp-for="TipoActividadId" class="control-label"></label>
-                <select asp-for="TipoActividadId" class="form-control" asp-items="ViewBag.TipoActividadId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaInicioActividad" class="control-label"></label>
-                <input asp-for="FechaInicioActividad" class="form-control" />
-                <span asp-validation-for="FechaInicioActividad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaFinActividad" class="control-label"></label>
-                <input asp-for="FechaFinActividad" class="form-control" />
-                <span asp-validation-for="FechaFinActividad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MontoLiquidoPercibido" class="control-label"></label>
-                <input asp-for="MontoLiquidoPercibido" class="form-control" />
-                <span asp-validation-for="MontoLiquidoPercibido" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Scoring" class="control-label"></label>
-                <input asp-for="Scoring" class="form-control" />
-                <span asp-validation-for="Scoring" class="text-danger"></span>
-            </div>
         </form>
     </div>
 </div>
@@ -165,15 +172,8 @@
         var divConyuge = document.getElementById("EstadoCivilId");
         divConyuge.addEventListener("change", Refresh);
         Refresh();
-        /*
-        $(document).ready(function () {
-            //On Change
-            $('#EstadoCivilId').change(function () {
-                mostrarFormConguye();
-            });
-        });
-        */
-        //Funcion Calcular Cuota
+
+        //Funcion Activar Datos de Conyuge
         function Refresh() {
             $.ajax({
                 type: "POST",
@@ -183,9 +183,23 @@
                 success: function (response) {
                     if (response.requiereDatosConyuge) {
                         $('.conyuge-form').show();
+                        $("#ConyugeCedulaIdentidad").val("");
+                        $("#ConyugeNombre").val("");
+                        $("#ConyugeApellido").val("");
+                        $("#ConyugeFechaNacimiento").val("");
+                        $("#ConyugeDomicilio").val("");
+                        $("#ConyugeCorreoElectronico").val("");
+                        $("#ConyugeTelefono").val("");
                     }
                     else {
                         $('.conyuge-form').hide();
+                        $("#ConyugeCedulaIdentidad").val("0123456");
+                        $("#ConyugeNombre").val("...");
+                        $("#ConyugeApellido").val("...");
+                        $("#ConyugeFechaNacimiento").val('1980-01-01');
+                        $("#ConyugeDomicilio").val("...");
+                        $("#ConyugeCorreoElectronico").val("a@a.com");
+                        $("#ConyugeTelefono").val("1909109209");
                     }
                 },
                 failure: function (response) {

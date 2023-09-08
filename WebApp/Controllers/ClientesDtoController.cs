@@ -79,8 +79,12 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring")] ClienteDto clienteDto)
+        public async Task<IActionResult> Create([Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, RequiereDatosConyuge, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring")] ClienteDto clienteDto)
         {
+            if (ModelState.IsValid)
+            {
+                ReglasNegocioCliente(clienteDto);
+            }
 
             if (ModelState.IsValid)
             {
@@ -107,16 +111,8 @@ namespace WebApp.Controllers
                         //evaluar si existe Persona Conyuge
                         existePersonaConyuge = await _context.Personas
                         .FirstOrDefaultAsync(m => m.CedulaIdentidad == clienteDto.ConyugeCedulaIdentidad) == null ? false : true;
-                        if (existePersonaConyuge)
-                        {
-                            ModelState.AddModelError(string.Empty,
-                            "Ya existe un Conyuge con misma Cedula Identidad. " + clienteDto.ConyugeCedulaIdentidad);
-                        }
-                        if (clienteDto.CedulaIdentidad == clienteDto.ConyugeCedulaIdentidad)
-                        {
-                            ModelState.AddModelError(string.Empty,
-                            "Cliente y Conyuge no pueden tener la misma Cedula Identidad. " + clienteDto.ConyugeCedulaIdentidad);
-                        }
+
+                        ReglasNegocioConyuge(clienteDto, existePersonaConyuge);
                     }
                 }
 
@@ -167,7 +163,6 @@ namespace WebApp.Controllers
             return View(clienteDto);
         }
 
-
         // GET: Clientes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -215,11 +210,16 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring")] ClienteDto clienteDto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, RequiereDatosConyuge, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring")] ClienteDto clienteDto)
         {
             if (id != clienteDto.Id)
             {
                 return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                ReglasNegocioCliente(clienteDto);
             }
 
             if (ModelState.IsValid)
@@ -252,16 +252,9 @@ namespace WebApp.Controllers
                             existePersonaConyuge = await _context.Personas
                             .FirstOrDefaultAsync(m => m.Id != clienteDto.ConyugePersonaId
                                                    && m.CedulaIdentidad == clienteDto.ConyugeCedulaIdentidad) == null ? false : true;
-                            if (existePersonaConyuge)
-                            {
-                                ModelState.AddModelError(string.Empty,
-                                "Ya existe otro Conyuge con misma Cedula Identidad. " + clienteDto.ConyugeCedulaIdentidad);
-                            }
-                            if (clienteDto.CedulaIdentidad == clienteDto.ConyugeCedulaIdentidad)
-                            {
-                                ModelState.AddModelError(string.Empty,
-                                "Cliente y Conyuge no pueden tener la misma Cedula Identidad. " + clienteDto.ConyugeCedulaIdentidad);
-                            }
+
+                            ReglasNegocioConyuge(clienteDto, existePersonaConyuge);
+
                         }
                     }
 
@@ -370,10 +363,10 @@ namespace WebApp.Controllers
                             //Persona Conyuge
                             var personaConyuge = await _context.Personas
                             .FirstOrDefaultAsync(m => m.Id == clienteDto.ConyugePersonaId);
-                            PersonaConyugeDtoToModel(clienteDto, personaConyuge);
                             //Evaluar si trajo datos la consulta de la BD
                             if (personaConyuge != null)
                             {
+                                PersonaConyugeDtoToModel(clienteDto, personaConyuge);
                                 //Eliminar Conyuge
                                 _context.Personas.Remove(personaConyuge);
                                 await _context.SaveChangesAsync();
@@ -638,5 +631,43 @@ namespace WebApp.Controllers
             }
         }
 
+        private void ReglasNegocioCliente(ClienteDto clienteDto)
+        {
+            if (clienteDto.FechaNacimiento >= DateTime.Today)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Nacimiento del Cliente no puede ser mayor o igual a la fecha de día. " + clienteDto.FechaNacimiento.Date);
+            }
+            if (clienteDto.FechaInicioActividad >= DateTime.Today)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Inicio Actividad del Cliente no puede ser mayor o igual a la fecha de día. " + clienteDto.FechaInicioActividad.Date);
+            }
+            if (clienteDto.FechaInicioActividad > clienteDto.FechaFinActividad)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Fin Actividad del Cliente no puede ser mayor a la Fecha Inicio Actividad. " + clienteDto.FechaFinActividad.Date);
+            }
+        }
+
+        private void ReglasNegocioConyuge(ClienteDto clienteDto, bool existePersonaConyuge)
+        {
+            if (existePersonaConyuge)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Ya existe un Conyuge con misma Cedula Identidad. " + clienteDto.ConyugeCedulaIdentidad);
+            }
+            if (clienteDto.CedulaIdentidad == clienteDto.ConyugeCedulaIdentidad)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Cliente y Conyuge no pueden tener la misma Cedula Identidad. " + clienteDto.ConyugeCedulaIdentidad);
+            }
+
+            if (clienteDto.ConyugeFechaNacimiento >= DateTime.Today)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Nacimiento del Conyuge no puede ser mayor o igual a la fecha de día. " + clienteDto.ConyugeFechaNacimiento);
+            }
+        }
     }
 }

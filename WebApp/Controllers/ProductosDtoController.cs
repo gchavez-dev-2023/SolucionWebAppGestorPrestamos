@@ -54,6 +54,7 @@ namespace WebApp.Controllers
         // GET: Productos/Create
         public IActionResult Create()
         {
+            //No es necesario
             //ViewData["BeneficiosId"] = new SelectList(_context.Beneficios, "Id", "Id");
             //ViewData["RequisitosId"] = new SelectList(_context.Requisitos, "Id", "Id");
             //ViewData["TerminosId"] = new SelectList(_context.Terminos, "Id", "Id");
@@ -69,7 +70,11 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                ReglasNegocio(productoDto);
+            }
 
+            if (ModelState.IsValid)
+            {
                 //evaluar si existe Producto
                 var existeProducto = await _context.Productos
                     .FirstOrDefaultAsync(m => m.Descripcion == productoDto.Descripcion) == null ? false : true;
@@ -147,6 +152,11 @@ namespace WebApp.Controllers
             if (id != productoDto.Id)
             {
                 return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                ReglasNegocio(productoDto);
             }
 
             if (ModelState.IsValid)
@@ -401,6 +411,33 @@ namespace WebApp.Controllers
             termino.TasaCastigoPrepago = productoDto.TasaCastigoPrepago;
             termino.TasaCoberturaAval = productoDto.TasaCoberturaAval;
             termino.TasaCoberturaConyuge = productoDto.TasaCoberturaConyuge;
+        }
+
+        private void ReglasNegocio(ProductoDto productoDto)
+        {
+            if (productoDto.EdadMinima > productoDto.EdadMaxima)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Edad Minima no puede ser mayor a Edad Limite");
+            }
+
+            if (productoDto.PlazoMinimo > productoDto.PlazoMaximo)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Plazo Minimo no puede ser mayor a Plazo Maximo");
+            }
+
+            if (productoDto.FechaInicioVigencia > productoDto.FechaFinVigencia)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Inicio Vigencia no puede ser mayor a Fecha Fin Vigencia");
+            }
+
+            if (productoDto.MontoMinimo > productoDto.MontoMinimo)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Monto Minimo no puede ser mayor a Monto Maximo");
+            }
         }
     }
 }

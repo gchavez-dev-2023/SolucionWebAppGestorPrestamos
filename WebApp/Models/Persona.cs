@@ -51,7 +51,7 @@ namespace WebApp.Models
         public string CorreoElectronico { get; set; } = null!;
         [Required]
         [DisplayName("Telefono")]
-        public int Telefono { get; set; }
+        public string Telefono { get; set; } = null!;
 
         [ForeignKey("Nacionalidad")]
         [DisplayName("Nacionalidad")]
