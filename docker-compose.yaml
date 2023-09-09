@@ -17,6 +17,8 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    environment:
+      - TZ=America/Santiago
   #Para usar el contenedor letsencrypt debe estar abierto puerto 80 y 443, sin restricciones
   #Sino el autorizador no genera el certificado para HTTPS
   letsencrypt:
@@ -34,6 +36,7 @@ services:
       - acme:/etc/acme.sh
     environment:
       - DEFAULT_EMAIL=${mail}
+      - TZ=America/Santiago
 
   duckdns:
     image: linuxserver/duckdns:version-1c126a78
@@ -43,7 +46,7 @@ services:
       #Cambiarlo para activar subdominio por DuckDNS
       - "SUBDOMAINS=${subdominio}"
       #Cambiarlo para activar subdominio por DuckDNS
-      - "TOKEN=3009a3c4-0c2d-4787-9ff9-498a63f6e99e"
+      - "TOKEN=${token-duck-dns}"
       - LOG_FILE=false #optional
     restart: always
 
@@ -53,7 +56,8 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=America/Santiago
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
@@ -84,6 +88,7 @@ services:
       - "ASPNETCORE_URLS=http://+:80"
       #Conexion BBDD
       - "ConnectionStrings:DefaultConnection=${stringconexion}"
+      - TZ=America/Santiago
 
 #Visor de BD MySQL - Pesa 500MB, utilizar workbench
 #  phpmyadmin:
