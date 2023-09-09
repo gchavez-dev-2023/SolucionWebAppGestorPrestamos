@@ -11,7 +11,7 @@
                 @if (User.IsInRole("SUPERUSER"))
                 {
                     <div style="color:white; background-color:green">
-                        Hello @User.Identity?.Name!
+                        Bienvenido @User.Identity?.Name!
                     </div>
                 }
                 else
@@ -19,7 +19,7 @@
                     if (User.IsInRole("ADMINISTRADOR"))
                     {
                         <div style="color:white;background-color:red">
-                            Hello @User.Identity?.Name!
+                            Bienvenido @User.Identity?.Name!
                         </div>
                     }
                     else
@@ -27,7 +27,7 @@
                         @if (User.IsInRole("GERENTE"))
                         {
                             <div style="color:white;background-color:black">
-                                Hello @User.Identity?.Name!
+                                Bienvenido @User.Identity?.Name!
                             </div>
                         }
                         else
@@ -35,7 +35,7 @@
                             @if (User.IsInRole("COLABORADOR"))
                             {
                                 <div style="color:white; background-color:purple">
-                                    Hello @User.Identity?.Name!
+                                    Bienvenido @User.Identity?.Name!
                                 </div>
                             }
                         }

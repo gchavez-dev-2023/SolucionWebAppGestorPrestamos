@@ -24,11 +24,12 @@ namespace WebApp.Controllers
             _context = context;
             _passwordHasher = passwordHasher;
         }
+
         public IActionResult Index()
         {
             var usersDto = new List<UserDto>();
 
-            var users = _context.Users.ToList();
+            var users = _context.Users.Where(x => x.UserName != User.Identity.Name).ToList();
             foreach (var user in users)
             {
                 var userDto = new UserDto();
@@ -36,7 +37,7 @@ namespace WebApp.Controllers
                 userDto.UserName = user.UserName;
                 userDto.Email = user.Email;
                 userDto.EmailConfirmed = user.EmailConfirmed;
-                userDto.PhoneNumber = user.PhoneNumber;
+                //userDto.PhoneNumber = user.PhoneNumber;
                 userDto.RoleDto = new RoleDto();
                 var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
                 bool usuarioPermitido = true;
@@ -49,6 +50,7 @@ namespace WebApp.Controllers
                     }
                     else
                     {
+                        userDto.RoleId = userRol.RoleId;
                         userDto.RoleDto.Id = rol.Id;
                         userDto.RoleDto.Name = rol.Name;
                     }
@@ -69,14 +71,14 @@ namespace WebApp.Controllers
             }
             else {
                 ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
-            }
-            
+            }            
             return View();
         } 
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Email,Password,EmailConfirmed,PhoneNumber,RoleId")] UserDto userDto)
+        public async Task<IActionResult> Create([Bind("Id,UserName,Email,Password,EmailConfirmed,RoleId")] UserDto userDto)
         {
+
             if (ModelState.IsValid)
             {
                 IdentityUser user = new IdentityUser
@@ -100,7 +102,7 @@ namespace WebApp.Controllers
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction("Index");
-                }                    
+                }
                 else
                 {
                     foreach (IdentityError error in result.Errors)
@@ -108,6 +110,15 @@ namespace WebApp.Controllers
                         ModelState.AddModelError("", error.Description);
                     }
                 }
+            }
+
+            if (User.IsInRole("ADMINISTRADOR"))
+            {
+                ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name");
+            }
+            else
+            {
+                ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
             }
             return View(userDto);
         }
@@ -123,21 +134,21 @@ namespace WebApp.Controllers
                 userDto.UserName = user.UserName;
                 userDto.Email = user.Email;
                 userDto.EmailConfirmed = user.EmailConfirmed;
-                userDto.PhoneNumber = user.PhoneNumber;
+                //userDto.PhoneNumber = user.PhoneNumber;
                 userDto.RoleDto = new RoleDto();
                 var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
                 if (userRol != null)
                 {
-                        userDto.RoleDto.Id = userRol.RoleId;                    
+                    userDto.RoleDto.Id = userRol.RoleId;                    
                 }
 
                 if (User.IsInRole("ADMINISTRADOR"))
                 {
-                    ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name");
+                    ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name", userRol.RoleId);
                 }
                 else
                 {
-                    ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
+                    ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", userRol.RoleId);
                 }
 
                 return View(userDto);
@@ -149,21 +160,10 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit([Bind("Id,UserName,Email,Password,EmailConfirmed,PhoneNumber,RoleId")] UserDto userDto)
+        public async Task<IActionResult> Edit([Bind("Id,UserName,Email,Password,EmailConfirmed,RoleId")] UserDto userDto)
         {
-
-            if (User.IsInRole("ADMINISTRADOR"))
-            {
-                ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name");
-            }
-            else
-            {
-                ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
-            }
-
             if (ModelState.IsValid)
             {
-
                 IdentityUser user = await _userManager.FindByIdAsync(userDto.Id);
                 if (user != null)
                 {
@@ -177,13 +177,10 @@ namespace WebApp.Controllers
                         var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
                         if (userRol != null && userRol.RoleId != userDto.RoleId)
                         {
-                            //Modificar Rol de un usuario
-                            userRol.RoleId = userDto.RoleId;
-                            _context.Update(userRol);
+                            //Eliminar Rol de un usuario
+                            _context.Remove(userRol);
                             await _context.SaveChangesAsync();
-                        }
-                        else
-                        {
+
                             //Constuir un UsuarioRol
                             _context.Add(new IdentityUserRole<string>
                             {
@@ -196,7 +193,10 @@ namespace WebApp.Controllers
                     }
                     else
                     {
-                        Errors(result);
+                        foreach (IdentityError error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
                     }
                 }
                 else
@@ -204,11 +204,58 @@ namespace WebApp.Controllers
                     ModelState.AddModelError("", "User Not Found");
                 }
             }
+
+            if (User.IsInRole("ADMINISTRADOR"))
+            {
+                ViewData["RoleId"] = new SelectList(_context.Roles.Where(c => c.Name != "SUPERUSER"), "Id", "Name", userDto.RoleId);
+            }
+            else
+            {
+                ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", userDto.RoleId);
+            }
+
             return View(userDto);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(string id)
+        // GET: Admin/Delete/5
+        public async Task<IActionResult> Delete(string? id)
+        {
+
+            IdentityUser user = await _userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                var userDto = new UserDto();
+                userDto.Id = user.Id;
+                userDto.UserName = user.UserName;
+                userDto.Email = user.Email;
+                userDto.EmailConfirmed = user.EmailConfirmed;
+                //userDto.PhoneNumber = user.PhoneNumber;
+                userDto.RoleDto = new RoleDto();
+                var userRol = _context.UserRoles.FirstOrDefault(p => p.UserId == user.Id);
+                if (userRol != null)
+                {
+                    userDto.RoleDto.Id = userRol.RoleId;
+                    var rol = _context.Roles.FirstOrDefault(p => p.Id == userRol.RoleId);
+                    if (rol != null)
+                    {
+                        userDto.RoleDto.Id = rol.Id;
+                        userDto.RoleDto.Name = rol.Name;
+                    }
+                }
+
+                return View(userDto);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        } 
+
+        // POST: Admin/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             IdentityUser user = await _userManager.FindByIdAsync(id);
             if (user != null)

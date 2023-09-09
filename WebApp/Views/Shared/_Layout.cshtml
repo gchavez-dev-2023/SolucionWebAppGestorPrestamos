@@ -91,14 +91,9 @@
                             </li>
                         }
                         @if (User.IsInRole("ADMINISTRADOR"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Usuarios/Roles
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Index">Usuarios</a>
-                                </ul>
+                        {                            
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Usuarios</a>
                             </li>
                         }
                         @if ( User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE") || User.IsInRole("COLABORADOR"))
