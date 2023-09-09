@@ -54,8 +54,7 @@ namespace WebApp.Dtos
         public string CorreoElectronico { get; set; } = null!;
 
         [Required(ErrorMessage = "Debe ingresar Numero Telefono.")]
-        [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Numero no valido")]
+        [RegularExpression(@"^(\+)?[9876543210]\d{10}$", ErrorMessage = "Numero no valido, formato +56998761234")]
         [DisplayName("Telefono")]
         public string Telefono { get; set; } = null!;
 
@@ -72,8 +71,7 @@ namespace WebApp.Dtos
         public string DomicilioAlternativo { get; set; } = null!;
 
         [Required(ErrorMessage = "Debe ingresar Numero Telefono.")]
-        [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Numero no valido")]
+        [RegularExpression(@"^(\+)?[9876543210]\d{10}$", ErrorMessage = "Numero no valido, formato +56998761234")]
         [DisplayName("Telefono Laboral")]
         public string TelefonoLaboral { get; set; }
 
@@ -161,8 +159,7 @@ namespace WebApp.Dtos
 
         //cambiar a String
         [Required(ErrorMessage = "Debe ingresar Numero Telefono.")]
-        [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Numero no valido")]
+        [RegularExpression(@"^(\+)?[9876543210]\d{10}$", ErrorMessage = "Numero no valido, formato +56998761234")]
         [DisplayName("Telefono")]
         public string ConyugeTelefono { get; set; } = null!;
 
@@ -172,5 +169,9 @@ namespace WebApp.Dtos
         [Column(Order = 1)]
         public int ConyugeNacionalidadId { get; set; }
         //
+
+        [Required(ErrorMessage = "Debe indicar si los datos del cliente estan verificados.")]
+        [DisplayName("¿Datos del Cliente verificado?")]
+        public bool DatosVerificados { get; set; }
     }
 }

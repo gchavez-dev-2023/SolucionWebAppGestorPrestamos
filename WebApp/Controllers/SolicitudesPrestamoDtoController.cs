@@ -25,7 +25,10 @@ namespace WebApp.Controllers
         // GET: SolicitudesPrestamo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = await _context.SolicitudesPrestamo.Include(s => s.Cliente).Include(s => s.Producto).OrderByDescending(s => s.Id).ToListAsync();
+            var applicationDbContext = await _context.SolicitudesPrestamo.Include(s => s.Cliente)
+                .Include(s => s.Producto)
+                .Where(x => x.Estado == "Analisis")
+                .OrderByDescending(s => s.Id).ToListAsync();
 
             foreach (var item in applicationDbContext)
             {
@@ -93,8 +96,17 @@ namespace WebApp.Controllers
         // GET: SolicitudesPrestamo/CreateStep1
         public IActionResult CreateStep1()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes.Include(c => c.Persona), "Id", "Persona.CedulaIdentidad");
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion");
+            //Solo cargar clientes, que sean personas validas
+            ViewData["ClienteId"] = new SelectList(_context.Clientes
+                .Include(c => c.Persona)
+                .Where(x => x.Persona.DatosVerificados == true)
+                , "Id", "Persona.CedulaIdentidad");
+
+            //Solo cargar productos, que esten vigentes
+            ViewData["ProductoId"] = new SelectList(_context.Productos
+                .Where(x => x.FechaInicioVigencia <= DateTime.Today
+                         && x.FechaFinVigencia >= DateTime.Today)
+                , "Id", "Descripcion");
 
             var solicitudPrestamoDto = new SolicitudPrestamoDto();
             //Inicializar campos necesarios
@@ -157,14 +169,6 @@ namespace WebApp.Controllers
                 solicitudPrestamoDto.AvalesDto.Add(avalDto);
             }
 
-            //if (ModelState.IsValid)
-            //{
-            //    return View(solicitudPrestamoDto);
-            //}
-            //else
-            //{
-            //    return RedirectToAction(nameof(CreateStep1));
-            //}
             solicitudPrestamoDto.ClienteDto.Id = solicitudPrestamoDto.ClienteId;
             solicitudPrestamoDto.ProductoDto.Id = solicitudPrestamoDto.ProductoId;
             return View(solicitudPrestamoDto);
@@ -226,6 +230,12 @@ namespace WebApp.Controllers
                     {
                         ModelState.AddModelError(string.Empty,
                         "Cedula Identidad no puede ser el mismo del Conyuge, error en Aval N° " + i + 1);
+                        return View(nameof(CreateStep2), solicitudPrestamoDto);
+                    }
+                    if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento >= DateTime.Today)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                        "Fecha de Nacimiento del Aval no puede ser mayor o igual a la fecha de día, error en Aval N° " + i + 1);
                         return View(nameof(CreateStep2), solicitudPrestamoDto);
                     }
                 }
@@ -408,6 +418,12 @@ namespace WebApp.Controllers
                             ModelState.AddModelError(string.Empty,
                             "Cedula Identidad no puede ser el mismo del Conyuge, error en Aval N° " + i + 1);
                             return View(solicitudPrestamoDto);
+                        }
+                        if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento >= DateTime.Today)
+                        {
+                            ModelState.AddModelError(string.Empty,
+                            "Fecha de Nacimiento del Aval no puede ser mayor o igual a la fecha de día, error en Aval N° " + i + 1);
+                            return View(nameof(CreateStep2), solicitudPrestamoDto);
                         }
                     }
 

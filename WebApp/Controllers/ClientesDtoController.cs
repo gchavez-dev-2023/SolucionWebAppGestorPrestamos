@@ -79,7 +79,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, RequiereDatosConyuge, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring")] ClienteDto clienteDto)
+        public async Task<IActionResult> Create([Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, RequiereDatosConyuge, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring, DatosVerificados")] ClienteDto clienteDto)
         {
             if (ModelState.IsValid)
             {
@@ -210,7 +210,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, RequiereDatosConyuge, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring")] ClienteDto clienteDto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, PersonaId, CedulaIdentidad, Nombre, Apellido, FechaNacimiento, GeneroId, Domicilio, CorreoElectronico, Telefono, NacionalidadId, DomicilioAlternativo, TelefonoLaboral, PersonaPoliticamenteExpuesta, OrigenIngresoId, TipoActividadId, FechaInicioActividad, FechaFinActividad, MontoLiquidoPercibido, EstadoCivilId, RequiereDatosConyuge, ConyugeId, ConyugePersonaId, ConyugeCedulaIdentidad, ConyugeNombre, ConyugeApellido, ConyugeFechaNacimiento, ConyugeGeneroId, ConyugeDomicilio, ConyugeCorreoElectronico, ConyugeTelefono, ConyugeNacionalidadId, Scoring, DatosVerificados")] ClienteDto clienteDto)
         {
             if (id != clienteDto.Id)
             {
@@ -538,7 +538,7 @@ namespace WebApp.Controllers
             persona.NacionalidadId = clienteDto.NacionalidadId;
             persona.UrlImagen = "-";
             persona.UrlDocumento = "-";
-            persona.DatosVerificados = true;
+            persona.DatosVerificados = clienteDto.DatosVerificados;
         }
 
         private static void PersonaConyugeDtoToModel(ClienteDto clienteDto, Persona persona)
@@ -604,6 +604,7 @@ namespace WebApp.Controllers
             clienteDto.CorreoElectronico = cliente.Persona.CorreoElectronico;
             clienteDto.Telefono = cliente.Persona.Telefono;
             clienteDto.NacionalidadId = cliente.Persona.NacionalidadId;
+            clienteDto.DatosVerificados = cliente.Persona.DatosVerificados;
             //PersonaConyugeConyugeId
             if(cliente.EstadoCivil.RequiereDatosConyuge)
             {

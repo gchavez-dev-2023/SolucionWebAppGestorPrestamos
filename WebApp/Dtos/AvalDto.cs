@@ -51,8 +51,7 @@ namespace WebApp.Dtos
         public string CorreoElectronico { get; set; } = null!;
 
         [Required(ErrorMessage = "Debe ingresar Numero Telefono.")]
-        [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Numero no valido")]
+        [RegularExpression(@"^(\+)?[9876543210]\d{10}$", ErrorMessage = "Numero no valido, formato +56998761234")]
         [DisplayName("Telefono")]
         public string Telefono { get; set; } = null!;
 
