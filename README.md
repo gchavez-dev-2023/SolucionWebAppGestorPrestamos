@@ -25,6 +25,11 @@ PASOS a SEGUIR en caso de eliminar la APP
 
 PASO habilitar ambiente AWS
 -Crear maquina EC2 Ubuntu 20.04, 1GB RAM, 10GB Disco, 1CPU
+#cambiar timezone de la maquina
+sudo timedatectl set-timezone America/Santiago
+#comprobar cambio
+timedatectl
+
 --Instalar Docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
