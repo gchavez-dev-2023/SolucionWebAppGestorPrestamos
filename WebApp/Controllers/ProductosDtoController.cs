@@ -427,6 +427,15 @@ namespace WebApp.Controllers
                 "Plazo Minimo no puede ser mayor a Plazo Maximo");
             }
 
+            DateTime fechaMinima = new DateTime();
+            DateTime.TryParse("1900-01-01", out fechaMinima);
+
+            if (productoDto.FechaInicioVigencia < fechaMinima)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Inicio Vigencia no puede ser menor 1900-01-01");
+            }
+
             if (productoDto.FechaInicioVigencia > productoDto.FechaFinVigencia)
             {
                 ModelState.AddModelError(string.Empty,

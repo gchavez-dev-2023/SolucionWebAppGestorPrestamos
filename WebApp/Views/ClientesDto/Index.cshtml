@@ -23,13 +23,13 @@
                 @Html.DisplayNameFor(model => model.Persona.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PersonaPoliticamenteExpuesta)
+                @Html.DisplayNameFor(model => model.EstadoCivilId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Scoring)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EstadoCivilId)
+                @Html.DisplayNameFor(model => model.Persona.DatosVerificados)
             </th>
             <th></th>
         </tr>
@@ -48,13 +48,13 @@
                     @Html.DisplayFor(modelItem => item.Persona.Nombre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PersonaPoliticamenteExpuesta)
+                    @Html.DisplayFor(modelItem => item.EstadoCivil.Descripcion)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Scoring)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EstadoCivil.Descripcion)
+                    @Html.DisplayFor(modelItem => item.Persona.DatosVerificados)
                 </td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Agrupar Botones">

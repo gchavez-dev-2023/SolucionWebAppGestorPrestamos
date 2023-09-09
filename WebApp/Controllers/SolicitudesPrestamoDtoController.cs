@@ -215,38 +215,52 @@ namespace WebApp.Controllers
 
                     }
                 }
-                //Lista para recolectar Cedula Identidad de Avales
-                List<string> listaCedulaIdentidadAvales = new List<string>();
-                for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+                //Producto con avales a comprobar
+                if (solicitudPrestamoDto.CantidadAvales > 0)
                 {
-                    listaCedulaIdentidadAvales.Add(solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad);
-                    if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == clienteCedulaIdentidad)
+                    //Lista para recolectar Cedula Identidad de Avales
+                    List<string> listaCedulaIdentidadAvales = new List<string>();
+                    for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
                     {
-                        ModelState.AddModelError(string.Empty,
-                        "Cedula Identidad no puede ser el mismo del Cliente, error en Aval N° " + i + 1);
-                        return View(nameof(CreateStep2), solicitudPrestamoDto);
-                    }
-                    if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == conyugeCedulaIdentidad)
-                    {
-                        ModelState.AddModelError(string.Empty,
-                        "Cedula Identidad no puede ser el mismo del Conyuge, error en Aval N° " + i + 1);
-                        return View(nameof(CreateStep2), solicitudPrestamoDto);
-                    }
-                    if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento >= DateTime.Today)
-                    {
-                        ModelState.AddModelError(string.Empty,
-                        "Fecha de Nacimiento del Aval no puede ser mayor o igual a la fecha de día, error en Aval N° " + i + 1);
-                        return View(nameof(CreateStep2), solicitudPrestamoDto);
-                    }
-                }
+                        listaCedulaIdentidadAvales.Add(solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad);
+                        if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == clienteCedulaIdentidad)
+                        {
+                            ModelState.AddModelError(string.Empty,
+                            "Cedula Identidad no puede ser el mismo del Cliente, error en Aval N° " + i + 1);
+                            return View(nameof(CreateStep2), solicitudPrestamoDto);
+                        }
+                        if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == conyugeCedulaIdentidad)
+                        {
+                            ModelState.AddModelError(string.Empty,
+                            "Cedula Identidad no puede ser el mismo del Conyuge, error en Aval N° " + i + 1);
+                            return View(nameof(CreateStep2), solicitudPrestamoDto);
+                        }
+                        if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento >= DateTime.Today)
+                        {
+                            ModelState.AddModelError(string.Empty,
+                            "Fecha de Nacimiento del Aval no puede ser mayor o igual a la fecha de día, error en Aval N° " + i + 1);
+                            return View(nameof(CreateStep2), solicitudPrestamoDto);
+                        }
+                        DateTime fechaMinima = new DateTime();
+                        DateTime.TryParse("1900-01-01", out fechaMinima);
 
-                //Comprobar si existen duplicados las Cedula Identidad de Avales.
-                var hasDuplicates = listaCedulaIdentidadAvales.GroupBy(x => x).Any(g => g.Count() > 1);
-                if (hasDuplicates)
-                {
-                    ModelState.AddModelError(string.Empty,
-                    "Existe Cedula de Identidad duplicada entre los avales.");
-                    return View(nameof(CreateStep2), solicitudPrestamoDto);
+                        if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento < fechaMinima)
+                        {
+                            ModelState.AddModelError(string.Empty,
+                            "Fecha de Nacimiento del Aval no puede ser menor 1900-01-01, error en Aval N° " + i + 1);
+                            return View(nameof(CreateStep2), solicitudPrestamoDto);
+                        }
+                    }
+
+                    //Comprobar si existen duplicados las Cedula Identidad de Avales.
+                    var hasDuplicates = listaCedulaIdentidadAvales.GroupBy(x => x).Any(g => g.Count() > 1);
+                    if (hasDuplicates)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                        "Existe Cedula de Identidad duplicada entre los avales.");
+                        return View(nameof(CreateStep2), solicitudPrestamoDto);
+                    }
+
                 }
 
                 //Alta de Solicitud
@@ -255,26 +269,29 @@ namespace WebApp.Controllers
                 _context.Add(solicitudPrestamo);
                 await _context.SaveChangesAsync();
 
-                //Alta Avales
-                for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+                //Producto con avales a comprobar
+                if (solicitudPrestamoDto.CantidadAvales > 0)
                 {
-                    //Alta Persona
-                    Persona persona = new Persona();
-                    PersonaDtoToModel(solicitudPrestamoDto.AvalesDto[i], persona);
-                    _context.Add(persona);
-                    await _context.SaveChangesAsync();
+                    //Alta Avales
+                    for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+                    {
+                        //Alta Persona
+                        Persona persona = new Persona();
+                        PersonaDtoToModel(solicitudPrestamoDto.AvalesDto[i], persona);
+                        _context.Add(persona);
+                        await _context.SaveChangesAsync();
 
-                    //Alta Aval
-                    Aval aval = new Aval();
-                    aval.SolicitudPrestamoId = solicitudPrestamo.Id;
-                    aval.PersonaId = persona.Id;
-                    aval.TasaCoberturaDeuda = 0;//TODO enlazar al producto.terminos
-                    aval.UrlDocumento = "-";
+                        //Alta Aval
+                        Aval aval = new Aval();
+                        aval.SolicitudPrestamoId = solicitudPrestamo.Id;
+                        aval.PersonaId = persona.Id;
+                        aval.TasaCoberturaDeuda = 0;//TODO enlazar al producto.terminos
+                        aval.UrlDocumento = "-";
 
-                    _context.Add(aval);
-                    await _context.SaveChangesAsync();
+                        _context.Add(aval);
+                        await _context.SaveChangesAsync();
+                    }
                 }
-
                 //Termino OK
                 return RedirectToAction(nameof(Index));
 
@@ -402,86 +419,99 @@ namespace WebApp.Controllers
                             }
                         }
                     }
-                    //Lista para recolectar Cedula Identidad de Avales
-                    List<string> listaCedulaIdentidadAvales = new List<string>();
-                    for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+                    //Producto con avales a comprobar
+                    if (solicitudPrestamoDto.CantidadAvales > 0)
                     {
-                        listaCedulaIdentidadAvales.Add(solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad);
-                        if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == clienteCedulaIdentidad)
+                        //Lista para recolectar Cedula Identidad de Avales
+                        List<string> listaCedulaIdentidadAvales = new List<string>();
+                        for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
+                        {
+                            listaCedulaIdentidadAvales.Add(solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad);
+                            if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == clienteCedulaIdentidad)
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                "Cedula Identidad no puede ser el mismo del Cliente, error en Aval N° " + i + 1);
+                                return View(solicitudPrestamoDto);
+                            }
+                            if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == conyugeCedulaIdentidad)
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                "Cedula Identidad no puede ser el mismo del Conyuge, error en Aval N° " + i + 1);
+                                return View(solicitudPrestamoDto);
+                            }
+                            if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento >= DateTime.Today)
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                "Fecha de Nacimiento del Aval no puede ser mayor o igual a la fecha de día, error en Aval N° " + i + 1);
+                                return View(nameof(CreateStep2), solicitudPrestamoDto);
+                            }
+                            DateTime fechaMinima = new DateTime();
+                            DateTime.TryParse("1900-01-01", out fechaMinima);
+
+                            if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento < fechaMinima)
+                            {
+                                ModelState.AddModelError(string.Empty,
+                                "Fecha de Nacimiento del Aval no puede ser menor 1900-01-01, error en Aval N° " + i + 1);
+                                return View(nameof(CreateStep2), solicitudPrestamoDto);
+                            }
+                        }
+
+                        //Comprobar si existen duplicados las Cedula Identidad de Avales.
+                        var hasDuplicates = listaCedulaIdentidadAvales.GroupBy(x => x).Any(g => g.Count() > 1);
+                        if (hasDuplicates)
                         {
                             ModelState.AddModelError(string.Empty,
-                            "Cedula Identidad no puede ser el mismo del Cliente, error en Aval N° " + i + 1);
+                            "Existe Cedula de Identidad duplicada entre los avales.");
                             return View(solicitudPrestamoDto);
                         }
-                        if (solicitudPrestamoDto.AvalesDto[i].CedulaIdentidad == conyugeCedulaIdentidad)
-                        {
-                            ModelState.AddModelError(string.Empty,
-                            "Cedula Identidad no puede ser el mismo del Conyuge, error en Aval N° " + i + 1);
-                            return View(solicitudPrestamoDto);
-                        }
-                        if (solicitudPrestamoDto.AvalesDto[i].FechaNacimiento >= DateTime.Today)
-                        {
-                            ModelState.AddModelError(string.Empty,
-                            "Fecha de Nacimiento del Aval no puede ser mayor o igual a la fecha de día, error en Aval N° " + i + 1);
-                            return View(nameof(CreateStep2), solicitudPrestamoDto);
-                        }
-                    }
 
-                    //Comprobar si existen duplicados las Cedula Identidad de Avales.
-                    var hasDuplicates = listaCedulaIdentidadAvales.GroupBy(x => x).Any(g => g.Count() > 1);
-                    if (hasDuplicates)
-                    {
-                        ModelState.AddModelError(string.Empty,
-                        "Existe Cedula de Identidad duplicada entre los avales.");
-                        return View(solicitudPrestamoDto);
-                    }
-
-                    //Tratar Avales
-                    for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
-                    {
-                        //Persona Aval
-                        var persona = await _context.Personas
-                        .FirstOrDefaultAsync(m => m.Id == solicitudPrestamoDto.AvalesDto[i].PersonaId);
-
-                        //Evaluar si trajo datos la consulta de la BD
-                        if (persona != null)
+                        //Tratar Avales
+                        for (int i = 0; i < solicitudPrestamoDto.AvalesDto.Count; i++)
                         {
-                            //Actualizar Persona Aval
-                            PersonaDtoToModel(solicitudPrestamoDto.AvalesDto[i], persona);
-                            _context.Update(persona);
-                        }
-                        else
-                        {
-                            //Crear Persona Aval
-                            persona = new Persona();
-                            PersonaDtoToModel(solicitudPrestamoDto.AvalesDto[i], persona);
-                            _context.Add(persona);
-                        }
-                        await _context.SaveChangesAsync();
+                            //Persona Aval
+                            var persona = await _context.Personas
+                            .FirstOrDefaultAsync(m => m.Id == solicitudPrestamoDto.AvalesDto[i].PersonaId);
 
-                        //Aval
-                        var aval = await _context.Avales
-                        .FirstOrDefaultAsync(m => m.Id == solicitudPrestamoDto.AvalesDto[i].Id);
+                            //Evaluar si trajo datos la consulta de la BD
+                            if (persona != null)
+                            {
+                                //Actualizar Persona Aval
+                                PersonaDtoToModel(solicitudPrestamoDto.AvalesDto[i], persona);
+                                _context.Update(persona);
+                            }
+                            else
+                            {
+                                //Crear Persona Aval
+                                persona = new Persona();
+                                PersonaDtoToModel(solicitudPrestamoDto.AvalesDto[i], persona);
+                                _context.Add(persona);
+                            }
+                            await _context.SaveChangesAsync();
 
-                        //Evaluar si trajo datos la consulta de la BD
-                        if (aval != null)
-                        {
-                            //Actualizar Aval
-                            aval.SolicitudPrestamoId = solicitudPrestamoDto.Id;
-                            aval.PersonaId = persona.Id;
-                            _context.Update(aval);
+                            //Aval
+                            var aval = await _context.Avales
+                            .FirstOrDefaultAsync(m => m.Id == solicitudPrestamoDto.AvalesDto[i].Id);
+
+                            //Evaluar si trajo datos la consulta de la BD
+                            if (aval != null)
+                            {
+                                //Actualizar Aval
+                                aval.SolicitudPrestamoId = solicitudPrestamoDto.Id;
+                                aval.PersonaId = persona.Id;
+                                _context.Update(aval);
+                            }
+                            else
+                            {
+                                //Crear Aval
+                                aval = new Aval();
+                                aval.SolicitudPrestamoId = solicitudPrestamoDto.Id;
+                                aval.PersonaId = persona.Id;
+                                aval.TasaCoberturaDeuda = 0;//TODO enlazar al producto.terminos
+                                aval.UrlDocumento = "-";
+                                _context.Add(aval);
+                            }
+                            await _context.SaveChangesAsync();
                         }
-                        else
-                        {
-                            //Crear Aval
-                            aval = new Aval();
-                            aval.SolicitudPrestamoId = solicitudPrestamoDto.Id;
-                            aval.PersonaId = persona.Id;
-                            aval.TasaCoberturaDeuda = 0;//TODO enlazar al producto.terminos
-                            aval.UrlDocumento = "-";
-                            _context.Add(aval);
-                        }
-                        await _context.SaveChangesAsync();
                     }
                 }
                 catch (DbUpdateConcurrencyException)
@@ -635,6 +665,7 @@ namespace WebApp.Controllers
                 avalDto.UrlDocumento = aval.UrlDocumento;
                 solicitudPrestamoDto.AvalesDto.Add(avalDto);
             }
+            solicitudPrestamoDto.CantidadAvales = solicitudPrestamo.Avales.Count();
         }
 
         private static void ClienteModelToDto(Cliente? cliente, ClienteDto clienteDto, Persona? personaConyuge)

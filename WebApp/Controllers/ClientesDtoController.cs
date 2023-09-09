@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Globalization;
 using WebApp.Data;
 using WebApp.Dtos;
 using WebApp.Models;
@@ -639,11 +640,25 @@ namespace WebApp.Controllers
                 ModelState.AddModelError(string.Empty,
                 "Fecha Nacimiento del Cliente no puede ser mayor o igual a la fecha de día. " + clienteDto.FechaNacimiento.Date);
             }
+            DateTime fechaMinima = new DateTime();
+            DateTime.TryParse("1900-01-01", out fechaMinima);
+            if (clienteDto.FechaNacimiento < fechaMinima)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Nacimiento del Cliente no puede ser menor 1900-01-01");
+            }
+
             if (clienteDto.FechaInicioActividad >= DateTime.Today)
             {
                 ModelState.AddModelError(string.Empty,
                 "Fecha Inicio Actividad del Cliente no puede ser mayor o igual a la fecha de día. " + clienteDto.FechaInicioActividad.Date);
             }
+            if (clienteDto.FechaInicioActividad < fechaMinima)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Inicio Actividad del Cliente no puede ser menor 1900-01-01");
+            }
+
             if (clienteDto.FechaInicioActividad > clienteDto.FechaFinActividad)
             {
                 ModelState.AddModelError(string.Empty,

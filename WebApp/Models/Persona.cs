@@ -58,6 +58,7 @@ namespace WebApp.Models
         public int NacionalidadId { get; set; }
         public string UrlImagen { get; set; } = null!;
         public string UrlDocumento { get; set; } = null!;
+        [DisplayName("¿Datos verificado?")]
         public bool DatosVerificados { get; set; }
         [ValidateNever]
         public virtual Genero Genero { get; set; } = null!;
