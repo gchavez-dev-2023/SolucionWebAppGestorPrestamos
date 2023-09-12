@@ -42,10 +42,12 @@
                     @Html.DisplayFor(modelItem => item.Descripcion)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FechaInicioVigencia)
+
+                    @Html.DisplayFor(modelItem => item.FechaInicioVigenciaDisplay)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FechaFinVigencia)
+                    @*@String.Format("{0:dd/MM/yyyy}",item.FechaFinVigencia)*@
+                    @Html.DisplayFor(modelItem => item.FechaFinVigenciaDisplay)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Beneficios.SolicitudEnLinea)
@@ -54,9 +56,9 @@
                     @Html.DisplayFor(modelItem => item.Requisitos.ScoringMinimo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Terminos.TasaNominal)
+                    @Html.DisplayFor(modelItem => item.Terminos.TasaNominalPercent)
                 </td>
-                <td>
+                <td id ="@item.Descripcion">
                     <div class="btn-group" role="group" aria-label="Agrupar Botones">
                         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>                         
                         <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>                         

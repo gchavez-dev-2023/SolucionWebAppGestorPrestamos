@@ -40,7 +40,14 @@
             @Html.DisplayNameFor(model => model.FechaNacimiento)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaNacimiento)
+            @*@String.Format("{0:dd/MM/yyyy}",Model.FechaNacimiento)*@
+            @Html.DisplayFor(model => model.FechaNacimientoDisplay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GeneroId)
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.Genero
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Domicilio)
@@ -61,28 +68,10 @@
             @Html.DisplayFor(model => model.Telefono)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DomicilioAlternativo)
+            @Html.DisplayNameFor(model => model.NacionalidadId)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DomicilioAlternativo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TelefonoLaboral)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TelefonoLaboral)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PersonaPoliticamenteExpuesta)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PersonaPoliticamenteExpuesta)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Scoring)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Scoring)
+            @ViewBag.Nacionalidad
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DomicilioAlternativo)
@@ -103,30 +92,44 @@
             @Html.DisplayFor(model => model.PersonaPoliticamenteExpuesta)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Scoring)
+            @Html.DisplayNameFor(model => model.TipoActividadId)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Scoring)
+            @ViewBag.TipoActividad
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FechaInicioActividad)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaInicioActividad)
+            @*@String.Format("{0:dd/MM/yyyy}",Model.FechaInicioActividad)*@
+            @Html.DisplayFor(model => model.FechaInicioActividadDisplay)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FechaFinActividad)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaFinActividad)
+            @*@String.Format("{0:dd/MM/yyyy}",Model.FechaFinActividad)*@
+            @Html.DisplayFor(model => model.FechaFinActividadDisplay)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MontoLiquidoPercibido)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MontoLiquidoPercibido)
+            @Html.DisplayFor(model => model.MontoLiquidoPercibidoDisplay)
         </dd>
-        
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Scoring)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Scoring)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EstadoCivilId)
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.EstadoCivil
+        </dd>
+
         @if (Model.ConyugeCedulaIdentidad != null)
         {
             <div class="col-md-6 conyuge-form">
@@ -134,7 +137,7 @@
                 <h4>Datos Conyuge</h4>
 
                 <dt class="col-sm-2">
-                   @Html.DisplayNameFor(model => model.ConyugeCedulaIdentidad)
+                    @Html.DisplayNameFor(model => model.ConyugeCedulaIdentidad)
                 </dt>
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.ConyugeCedulaIdentidad)
@@ -155,7 +158,14 @@
                     @Html.DisplayNameFor(model => model.ConyugeFechaNacimiento)
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.ConyugeFechaNacimiento)
+                    @*@String.Format("{0:dd/MM/yyyy}",Model.ConyugeFechaNacimiento)*@
+                    @Html.DisplayFor(model => model.ConyugeFechaNacimientoDisplay)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ConyugeGeneroId)
+                </dt>
+                <dd class="col-sm-10">
+                    @ViewBag.ConyugeGenero
                 </dd>
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.ConyugeDomicilio)
@@ -175,10 +185,15 @@
                 <dd class="col-sm-10">
                     @Html.DisplayFor(model => model.ConyugeTelefono)
                 </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ConyugeNacionalidadId)
+                </dt>
+                <dd class="col-sm-10">
+                    @ViewBag.ConyugeNacionalidad
+                </dd>
                 <hr />
             </div>
         }
-
     </dl>
 
     <dt class="col-sm-2">
@@ -187,5 +202,4 @@
     <dd class="col-sm-10">
         @Html.DisplayFor(model => model.DatosVerificados)
     </dd>
-
 </div>

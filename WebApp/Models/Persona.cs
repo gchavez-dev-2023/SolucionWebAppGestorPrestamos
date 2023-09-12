@@ -35,6 +35,10 @@ namespace WebApp.Models
         [DataType(DataType.Date)]
         public DateTime FechaNacimiento { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha de Nacimiento")]
+        public virtual DateTime FechaNacimientoDisplay { get { return FechaNacimiento; } }
+
         [ForeignKey("Genero")]
         [DisplayName("Sexo")]
         public int GeneroId { get; set; }

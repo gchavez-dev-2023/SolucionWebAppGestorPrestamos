@@ -56,7 +56,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Persona.DatosVerificados)
                 </td>
-                <td>
+                <td id="@item.Persona.CedulaIdentidad">
                     <div class="btn-group" role="group" aria-label="Agrupar Botones">
                         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>
                         <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>

@@ -3,9 +3,21 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 #Para que funcione DinkTOPDF
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils libgdiplus libc6-dev && ln -s /usr/lib/libgdiplus.so /usr/lib/gdiplus.dll
+
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
+ENV TZ=America/Santiago
+#ENV LC_ALL=es_CL.UTF-8
+#ENV LC_ALL=C.UTF-8
+#ENV LC_NUMERIC=C.UTF-8
+#ENV LC_MONETARY=es_CL.UTF-8
+ENV LC_TIME=es_CL.UTF-8
+#ENV LC_ALL=es_CL.UTF-8
+#ENV LANG=es_CL.UTF-8
+#ENV LANGUAGE=es_CL.UTF-8
+#ENV LC_MONETARY=es_CL.UTF-8
+#ENV LC_NUMERIC=C.UTF-8
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src

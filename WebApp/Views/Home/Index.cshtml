@@ -1,4 +1,6 @@
-﻿@{
+﻿@model WebApp.Dtos.SolicitudPrestamoDto
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -28,26 +30,39 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label class="control-label" for="MontoSolicitado">Monto Solicitado</label>
-                        <input class="form-control" type="number" placeholder="Ingrese Monto." id="MontoSolicitado" name="MontoSolicitado" value="100000">
+                        <label asp-for="MontoSolicitado" class="control-label"></label>
+                        <input asp-for="MontoSolicitado" class="form-control" placeholder="Ingrese Monto." value="100000" />
+
+                        @*<label class="control-label" for="MontoSolicitado">Monto Solicitado</label>
+                        <input class="form-control" type="number" placeholder="Ingrese Monto." id="MontoSolicitado" name="MontoSolicitado" value="100000">*@
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label class="control-label" for="CantidadCuotas">Cantidad de Cuotas</label>
-                        <input class="form-control" type="number" placeholder="Ingrese Cantidad Cuotas." id="CantidadCuotas" name="CantidadCuotas" value="12">
+                        <label asp-for="CantidadCuotas" class="control-label"></label>
+                        <input asp-for="CantidadCuotas" class="form-control" placeholder="Ingrese Cantidad Cuotas." value="12" />
+
+                        @*<label class="control-label" for="CantidadCuotas">Cantidad de Cuotas</label>
+                        <input class="form-control" type="number" placeholder="Ingrese Cantidad Cuotas." id="CantidadCuotas" name="CantidadCuotas" value="12">*@
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label class="control-label" for="CostoTotalFinanciero">Costo Financiero Total</label>
-                        <input class="form-control" readonly="" type="number" id="CostoTotalFinanciero" name="CostoTotalFinanciero" value="0">
+                        <label asp-for="CostoTotalFinanciero" class="control-label"></label>
+                        <input asp-for="CostoTotalFinanciero" class="form-control" readonly="0" />
+
+                        @*<label class="control-label" for="CostoTotalFinanciero">Costo Financiero Total</label>
+                        <input class="form-control" readonly="" type="number" id="CostoTotalFinanciero" name="CostoTotalFinanciero" value="0">*@
                     </div>
                 </div>
+
                 <div class="col">
                     <div class="form-group">
-                        <label class="control-label" for="ValorCuota">Valor Cuota</label>
-                        <input class="form-control" readonly="" type="number" id="ValorCuota" name="ValorCuota" value="0">
+                        <label asp-for="ValorCuotaDisplay" class="control-label"></label>
+                        <input asp-for="ValorCuotaDisplay" class="form-control" readonly="" value="0" />
+
+                     @*<label class="control-label" for="ValorCuota">Valor Cuota</label>
+                        <input class="form-control" readonly="" type="number" id="ValorCuota" name="ValorCuota" value="0">*@
                     </div>
                 </div>
             </div>
@@ -88,28 +103,28 @@ else
 
             //Funcion Calcular Cuota
             function CalcularCuota() {
-            var montoSolicitado = parseFloat($("#MontoSolicitado").val());
-            var cantidadCuotas = parseInt($("#CantidadCuotas").val());
+                var montoSolicitado = parseFloat($("#MontoSolicitado").val());
+                var cantidadCuotas = parseInt($("#CantidadCuotas").val());
 
-            $.ajax({
-            type: "POST",
-            url: "/Validator/EvalSimulacion",
-            dataType: 'json',
-            data: { "productoId": $("#ProductoId").val()
-            , "montoSolicitado": $("#MontoSolicitado").val()
-            , "cantidadCuotas": $("#CantidadCuotas").val() 
-            },
-            success: function (response) {
-            $("#CostoTotalFinanciero").val(response.costoTotalFinanciero);
-            $("#ValorCuota").val(response.valorCuota);
-            },
-            failure: function (response) {
-            alert("failure " + response.responseText);
-            },
-            error: function (response) {
-            alert("error " + response.responseText);
-            }
-            });
+                $.ajax({
+                    type: "POST",
+                    url: "/Validator/EvalSimulacion",
+                    dataType: 'json',
+                    data: { "productoId": $("#ProductoId").val()
+                        , "montoSolicitado": $("#MontoSolicitado").val()
+                        , "cantidadCuotas": $("#CantidadCuotas").val() 
+                    },
+                    success: function (response) {
+                        $("#CostoTotalFinanciero").val(response.costoTotalFinanciero);
+                        $("#ValorCuotaDisplay").val(response.valorCuotaDisplay);
+                    },
+                    failure: function (response) {
+                        lert("failure " + response.responseText);
+                    },
+                    error: function (response) {
+                        alert("error " + response.responseText);
+                    }
+                });
             }
         </script>
     }

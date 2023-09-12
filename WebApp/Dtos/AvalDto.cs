@@ -32,6 +32,10 @@ namespace WebApp.Dtos
         [DisplayName("Fecha de Nacimiento")]
         public DateTime FechaNacimiento { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha de Nacimiento")]
+        public virtual DateTime FechaNacimientoDisplay { get { return FechaNacimiento; } }
+
         [Required(ErrorMessage = "Debe seleccionar Genero.")]
         [ForeignKey("Genero")]
         [DisplayName("Sexo")]

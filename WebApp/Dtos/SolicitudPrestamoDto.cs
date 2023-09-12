@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace WebApp.Dtos
 {
@@ -21,6 +22,9 @@ namespace WebApp.Dtos
         [DisplayName("Monto Solicitado")]
         public decimal MontoSolicitado { get; set; }
 
+        [DisplayName("Monto Solicitado")]
+        public virtual string MontoSolicitadoDisplay { get { return String.Format(CultureInfo.GetCultureInfo("es-AR"), "{0:C}", MontoSolicitado); } }
+
         [Required(ErrorMessage = "Debe ingresar cantidad, valores permitidos entre 0 y 600")]
         [Range(0, 600)]
         [DisplayName("Plazo Minimo")]
@@ -31,10 +35,16 @@ namespace WebApp.Dtos
         [DataType(DataType.Currency)]
         public decimal ValorCuota { get; set; }
 
+        [DisplayName("Monto Cuota")]
+        public virtual string ValorCuotaDisplay { get { return String.Format(CultureInfo.GetCultureInfo("es-AR"), "{0:C}", ValorCuota); } }
+
         [Required]
         [DisplayName("Costo Total Financiero")]
-        [DataType(DataType.Currency)]
         public decimal CostoTotalFinanciero { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:P2}")]
+        [DisplayName("Costo Total Financiero")]
+        public virtual decimal CostoTotalFinancieroPercent { get { return CostoTotalFinanciero / 100; } }
 
         public decimal TasaCoberturaDeudaConyuge { get; set; }
 
@@ -43,6 +53,9 @@ namespace WebApp.Dtos
         [DataType(DataType.DateTime)]
         public DateTime FechaSolicitud { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss}")]
+        [DisplayName("Fecha de Solicitud")]
+        public virtual DateTime FechaSolicitudDisplay { get { return FechaSolicitud; } }
         public string UrlDocumento { get; set; } = null!;
 
         [Required]

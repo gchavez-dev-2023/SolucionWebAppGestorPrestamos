@@ -44,7 +44,7 @@
             @Html.DisplayNameFor(model => model.MontoSolicitado)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MontoSolicitado)
+            @Html.DisplayFor(model => model.MontoSolicitadoDisplay)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CantidadCuotas)
@@ -56,13 +56,13 @@
             @Html.DisplayNameFor(model => model.ValorCuota)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ValorCuota)
+            @Html.DisplayFor(model => model.ValorCuotaDisplay)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CostoTotalFinanciero)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CostoTotalFinanciero)
+            @Html.DisplayFor(model => model.CostoTotalFinancieroPercent)
         </dd>
         @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TasaCoberturaDeudaConyuge)
@@ -73,8 +73,9 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FechaSolicitud)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaSolicitud)
+        <dd class="col-sm-10">
+            @*@String.Format("{0:dd/MM/yyyy hh:mm:ss}",Model.FechaSolicitud)*@
+            @Html.DisplayFor(model => model.FechaSolicitudDisplay)
         </dd>
        @* <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UrlDocumento)
@@ -118,7 +119,8 @@
                 @Html.DisplayNameFor(model => model.AvalesDto[0].FechaNacimiento)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.AvalesDto[i].FechaNacimiento)
+                @*@String.Format("{0:dd/MM/yyyy}",Model.AvalesDto[i].FechaNacimiento)*@
+                @Html.DisplayFor(model => model.AvalesDto[i].FechaNacimientoDisplay)
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.AvalesDto[0].Domicilio)

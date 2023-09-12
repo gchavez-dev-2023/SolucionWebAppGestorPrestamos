@@ -12,6 +12,8 @@ namespace WebApp.Models
         }
 
         public int Id { get; set; }
+
+        [DisplayName("¿Posee Aprobación 24 Horas?")]
         public bool Aprobacion24Horas { get; set; }
 
         [DisplayName("¿Se puede solicitar en linea?")]

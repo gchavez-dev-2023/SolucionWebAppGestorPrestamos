@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WebApp.Models.SolicitudPrestamo>
+﻿@using System.Globalization;
+@model IEnumerable<WebApp.Models.SolicitudPrestamo>
 
 @{
     ViewData["Title"] = "Lista de Solicitud Prestamos";
@@ -51,24 +52,27 @@
                     @Html.DisplayFor(modelItem => item.Producto.Descripcion)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MontoSolicitado)
+                    @*@String.Format(CultureInfo.GetCultureInfo("es-AR"), "{0:C}", item.MontoSolicitado)*@
+                    @*@String.Format("${0:C2}",item.MontoSolicitado)*@
+                    @Html.DisplayFor(modelItem => item.MontoSolicitadoDisplay)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CantidadCuotas)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ValorCuota)
+                    @Html.DisplayFor(modelItem => item.ValorCuotaDisplay)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CostoTotalFinanciero)
+                    @Html.DisplayFor(modelItem => item.CostoTotalFinancieroPercent)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FechaSolicitud)
+                    @*@String.Format("{0:dd/MM/yyyy hh:mm:ss}",item.FechaSolicitud)*@
+                    @Html.DisplayFor(modelItem => item.FechaSolicitudDisplay)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Estado)
                 </td>
-                <td>
+                <td id="@item.Cliente.Persona.CedulaIdentidad@item.Producto.Descripcion@item.FechaSolicitud">
                     <div class="btn-group" role="group" aria-label="Agrupar Botones">
                         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>
                         <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>

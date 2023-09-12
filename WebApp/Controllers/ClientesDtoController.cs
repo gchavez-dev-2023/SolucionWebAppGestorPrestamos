@@ -49,11 +49,25 @@ namespace WebApp.Controllers
             }
 
             var personaConyuge = new Persona();
+            
+            //Recuperar datos de las descripciones de campos foraneos
+            var genero = await _context.Generos.ToListAsync();
+            var nacionalidad = await _context.Nacionalidades.ToListAsync();
+            var estadoCivil = await _context.EstadosCivil.ToListAsync();
+            var tipoactividad = await _context.TiposActividad.ToListAsync();
+
+            ViewData["Genero"] = genero.FirstOrDefault(x  => x.Id == cliente.Persona.GeneroId).Descripcion;
+            ViewData["Nacionalidad"] = nacionalidad.FirstOrDefault(x => x.Id == cliente.Persona.NacionalidadId).Descripcion;
+            ViewData["EstadoCivil"] = estadoCivil.FirstOrDefault(x => x.Id == cliente.EstadoCivilId).Descripcion;
+            ViewData["TipoActividad"] = tipoactividad.FirstOrDefault(x => x.Id == cliente.OrigenesIngresoClientes.FirstOrDefault().TipoActividadId).Descripcion;
 
             if (cliente.EstadoCivil.RequiereDatosConyuge)
             {
                 var conyuge = cliente.Conyuges.FirstOrDefault();
                 personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+
+                ViewData["ConyugeGenero"] = genero.FirstOrDefault(x => x.Id == personaConyuge.GeneroId).Descripcion;
+                ViewData["ConyugeNacionalidad"] = nacionalidad.FirstOrDefault(x => x.Id == personaConyuge.NacionalidadId).Descripcion;
             }
 
             var clienteDto = new ClienteDto();
@@ -161,6 +175,7 @@ namespace WebApp.Controllers
             ViewData["TipoActividadId"] = new SelectList(_context.TiposActividad, "Id", "Descripcion");
             ViewData["ConyugeGeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion");
             ViewData["ConyugeNacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion");
+
             return View(clienteDto);
         }
 
@@ -423,10 +438,24 @@ namespace WebApp.Controllers
 
             var personaConyuge = new Persona();
 
+            //Recuperar datos de las descripciones de campos foraneos
+            var genero = await _context.Generos.ToListAsync();
+            var nacionalidad = await _context.Nacionalidades.ToListAsync();
+            var estadoCivil = await _context.EstadosCivil.ToListAsync();
+            var tipoactividad = await _context.TiposActividad.ToListAsync();
+
+            ViewData["Genero"] = genero.FirstOrDefault(x => x.Id == cliente.Persona.GeneroId).Descripcion;
+            ViewData["Nacionalidad"] = nacionalidad.FirstOrDefault(x => x.Id == cliente.Persona.NacionalidadId).Descripcion;
+            ViewData["EstadoCivil"] = estadoCivil.FirstOrDefault(x => x.Id == cliente.EstadoCivilId).Descripcion;
+            ViewData["TipoActividad"] = tipoactividad.FirstOrDefault(x => x.Id == cliente.OrigenesIngresoClientes.FirstOrDefault().TipoActividadId).Descripcion;
+
             if (cliente.EstadoCivil.RequiereDatosConyuge)
             {
                 var conyuge = cliente.Conyuges.FirstOrDefault();
                 personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
+
+                ViewData["ConyugeGenero"] = genero.FirstOrDefault(x => x.Id == personaConyuge.GeneroId).Descripcion;
+                ViewData["ConyugeNacionalidad"] = nacionalidad.FirstOrDefault(x => x.Id == personaConyuge.NacionalidadId).Descripcion;
             }
 
             var clienteDto = new ClienteDto();
@@ -653,6 +682,13 @@ namespace WebApp.Controllers
                 ModelState.AddModelError(string.Empty,
                 "Fecha Inicio Actividad del Cliente no puede ser mayor o igual a la fecha de día. " + clienteDto.FechaInicioActividad.Date);
             }
+
+            if (clienteDto.FechaInicioActividad < clienteDto.FechaNacimiento)
+            {
+                ModelState.AddModelError(string.Empty,
+                "Fecha Inicio Actividad del Cliente no puede ser mayor o igual a la fecha de nacimiento del cliente. " + clienteDto.FechaInicioActividad.Date);
+            }
+
             if (clienteDto.FechaInicioActividad < fechaMinima)
             {
                 ModelState.AddModelError(string.Empty,

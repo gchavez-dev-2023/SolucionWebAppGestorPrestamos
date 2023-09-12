@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace WebApp.Dtos
 {
@@ -33,6 +34,9 @@ namespace WebApp.Dtos
         [DataType(DataType.Date)]
         [DisplayName("Fecha de Nacimiento")]
         public DateTime FechaNacimiento { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha de Nacimiento")]
+        public virtual DateTime FechaNacimientoDisplay { get { return FechaNacimiento; } }
         public int Edad { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar Genero.")]
@@ -73,7 +77,7 @@ namespace WebApp.Dtos
         [Required(ErrorMessage = "Debe ingresar Numero Telefono.")]
         [RegularExpression(@"^(\+)?[9876543210]\d{10}$", ErrorMessage = "Numero no valido, formato +56998761234")]
         [DisplayName("Telefono Laboral")]
-        public string TelefonoLaboral { get; set; }
+        public string TelefonoLaboral { get; set; } = null!;
 
         [Required(ErrorMessage = "Debe indicar si es PEP.")]
         [Column(TypeName = "bool")]
@@ -93,20 +97,29 @@ namespace WebApp.Dtos
         [DisplayName("Fecha de Inicio Actividad Laboral")]
         [DataType(DataType.Date)]
         public DateTime FechaInicioActividad { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha de Inicio Actividad Laboral")]
+        public virtual DateTime FechaInicioActividadDisplay { get { return FechaInicioActividad; } }
 
         [Required(ErrorMessage = "Debe ingresar fecha valida, menor a la Fecha de Inicio Actividad Laboral.")]
         [DisplayName("Fecha de Fin Actividad Laboral")]
         [DataType(DataType.Date)]
         public DateTime FechaFinActividad { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha de Fin Actividad Laboral")]
+        public virtual DateTime FechaFinActividadDisplay { get { return FechaFinActividad; } }
 
         [Required(ErrorMessage = "Debe ingresar monto, valores permitidos entre 10.000,00 y 10.000.000,00")]
         [Range(10000, 100000000)]
         [DisplayName("Monto Liquido Percibido Actividad Laboral")]
         [DataType(DataType.Currency)]
         public decimal MontoLiquidoPercibido { get; set; }
+        [DisplayName("Monto Liquido Percibido Actividad Laboral")]
+        public virtual string MontoLiquidoPercibidoDisplay { get { return String.Format(CultureInfo.GetCultureInfo("es-AR"), "{0:C}", MontoLiquidoPercibido); } }
 
         [Required(ErrorMessage = "Debe ingresar cantidad, valores permitidos entre 0 y 100")]
         [Range(0, 100)]
+        [DisplayName("Scoring")]
         public int Scoring { get; set; }
         ///
         [Required(ErrorMessage = "Debe seleccionar Estado Civil.")]
@@ -139,6 +152,9 @@ namespace WebApp.Dtos
         [DisplayName("Fecha de Nacimiento")]
         public DateTime ConyugeFechaNacimiento { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha de Nacimiento")]
+        public virtual DateTime ConyugeFechaNacimientoDisplay { get { return ConyugeFechaNacimiento; } }
         [Required(ErrorMessage = "Debe seleccionar Genero.")]
         [ForeignKey("Genero")]
         [DisplayName("Sexo")]

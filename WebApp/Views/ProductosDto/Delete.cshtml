@@ -28,13 +28,15 @@
             @Html.DisplayNameFor(model => model.FechaInicioVigencia)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaInicioVigencia)
+            @*@String.Format("{0:dd/MM/yyyy}",Model.FechaInicioVigencia)*@
+            @Html.DisplayFor(model => model.FechaInicioVigenciaDisplay)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FechaFinVigencia)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaFinVigencia)
+            @*@String.Format("{0:dd/MM/yyyy}",Model.FechaFinVigencia)*@
+            @Html.DisplayFor(model => model.FechaFinVigenciaDisplay)
         </dd>
 
         <dt class="col-sm-2">
@@ -85,13 +87,13 @@
             @Html.DisplayNameFor(model => model.MontoMinimo)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MontoMinimo)
+            @Html.DisplayFor(model => model.MontoMinimoDisplay)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MontoMaximo)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MontoMaximo)
+            @Html.DisplayFor(model => model.MontoMaximoDisplay)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PlazoMinimo)
@@ -109,31 +111,31 @@
             @Html.DisplayNameFor(model => model.TasaNominal)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaNominal)
+            @Html.DisplayFor(model => model.TasaNominalPercent)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TasaGastosAdministrativos)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaGastosAdministrativos)
+            @Html.DisplayFor(model => model.TasaGastosAdministrativosPercent)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TasaGastosCobranza)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaGastosCobranza)
+            @Html.DisplayFor(model => model.TasaGastosCobranzaPercent)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TasaSeguros)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaSeguros)
+            @Html.DisplayFor(model => model.TasaSegurosPercent)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TasaInteresMora)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaInteresMora)
+            @Html.DisplayFor(model => model.TasaInteresMoraPercent)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EsPrepagable)
@@ -145,19 +147,19 @@
             @Html.DisplayNameFor(model => model.TasaCastigoPrepago)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaCastigoPrepago)
+            @Html.DisplayFor(model => model.TasaCastigoPrepagoPercent)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TasaCoberturaAval)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaCoberturaAval)
+            @Html.DisplayFor(model => model.TasaCoberturaAvalPercent)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TasaCoberturaConyuge)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TasaCoberturaConyuge)
+            @Html.DisplayFor(model => model.TasaCoberturaConyugePercent)
         </dd>
 
     </dl>

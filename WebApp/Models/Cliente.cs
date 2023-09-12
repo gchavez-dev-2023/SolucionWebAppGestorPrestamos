@@ -19,8 +19,10 @@ namespace WebApp.Models
        
         public int PersonaId { get; set; }
 
+        [DisplayName("Domicilio Alternativo")]
         public string DomicilioAlternativo { get; set; } = null!;
 
+        [DisplayName("Telefono Laboral")]
         public string TelefonoLaboral { get; set; }
 
         [DisplayName("Persona Politicamente Expuesta")]
@@ -28,6 +30,8 @@ namespace WebApp.Models
 
         [DisplayName("Estado Civil")]
         public int EstadoCivilId { get; set; }
+
+        [DisplayName("Scoring")]
         public int Scoring { get; set; }
         public string UrlDocumento { get; set; } = null!;
         [ValidateNever]

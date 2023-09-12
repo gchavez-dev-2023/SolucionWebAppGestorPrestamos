@@ -29,10 +29,20 @@ namespace WebApp.Models
         [DisplayName("Fecha Inicio Vigencia")]
         [DataType(DataType.Date)]
         public DateTime FechaInicioVigencia { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha Inicio Vigencia")]
+        public virtual DateTime FechaInicioVigenciaDisplay { get { return FechaInicioVigencia; } }
+
         [Required]
         [DisplayName("Fecha Fin Vigencia")]
         [DataType(DataType.Date)]
         public DateTime FechaFinVigencia { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Fecha Fin Vigencia")]
+        public virtual DateTime FechaFinVigenciaDisplay { get { return FechaFinVigencia; } }
+
         [ValidateNever]
         public virtual Beneficio Beneficios { get; set; } = null!;
         [ValidateNever]

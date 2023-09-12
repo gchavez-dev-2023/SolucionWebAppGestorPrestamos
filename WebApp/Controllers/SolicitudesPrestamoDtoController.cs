@@ -25,7 +25,8 @@ namespace WebApp.Controllers
         // GET: SolicitudesPrestamo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = await _context.SolicitudesPrestamo.Include(s => s.Cliente)
+            var applicationDbContext = await _context.SolicitudesPrestamo
+                .Include(s => s.Cliente)
                 .Include(s => s.Producto)
                 .Where(x => x.Estado == "Analisis")
                 .OrderByDescending(s => s.Id).ToListAsync();
@@ -68,7 +69,6 @@ namespace WebApp.Controllers
                 var conyuge = cliente.Conyuges.FirstOrDefault();
                 personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
             }
-
 
             var producto = await _context.Productos
                 .Include(p => p.Beneficios)
@@ -314,6 +314,7 @@ namespace WebApp.Controllers
         // GET: SolicitudesPrestamo/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
             if (id == null || _context.SolicitudesPrestamo == null)
             {
                 return NotFound();
@@ -336,7 +337,7 @@ namespace WebApp.Controllers
 
             var personaConyuge = new Persona();
 
-            if (cliente.EstadoCivil.RequiereDatosConyuge)
+            if (cliente != null && cliente.EstadoCivil.RequiereDatosConyuge)
             {
                 var conyuge = cliente.Conyuges.FirstOrDefault();
                 personaConyuge = await _context.Personas.FirstOrDefaultAsync(c => c.Id == conyuge.PersonaId);
@@ -380,16 +381,16 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ClienteId,ClienteDto,ProductoId,ProductoDto,MontoSolicitado,CantidadCuotas,ValorCuota,CostoTotalFinanciero,TasaCoberturaDeudaConyuge,FechaSolicitud,UrlDocumento,Estado,CantidadAvales,AvalesDto")] SolicitudPrestamoDto solicitudPrestamoDto)
         {
-            if (id != solicitudPrestamoDto.Id)
-            {
-                return NotFound();
-            }
-
             ViewData["ClienteId"] = new SelectList(_context.Clientes.Include(c => c.Persona), "Id", "Persona.CedulaIdentidad", solicitudPrestamoDto.ClienteId);
             ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamoDto.ProductoId);
 
             ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Descripcion");
             ViewData["NacionalidadId"] = new SelectList(_context.Nacionalidades, "Id", "Descripcion");
+
+            if (id != solicitudPrestamoDto.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
@@ -401,7 +402,7 @@ namespace WebApp.Controllers
                         .Include(c => c.Persona)
                         .Include(c => c.EstadoCivil)
                         .Include(c => c.Conyuges)
-                        .FirstOrDefaultAsync(x => x.Id == solicitudPrestamoDto.ClienteId);
+                        .FirstOrDefaultAsync(x => x.Id == solicitudPrestamoDto.Id);
 
                     if (cliente != null)
                     {
