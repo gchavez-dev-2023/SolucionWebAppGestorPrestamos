@@ -18,7 +18,7 @@ services:
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     environment:
-      - TZ=America/Santiago
+      - "TZ=America/Santiago"
   #Para usar el contenedor letsencrypt debe estar abierto puerto 80 y 443, sin restricciones
   #Sino el autorizador no genera el certificado para HTTPS
   letsencrypt:
@@ -36,13 +36,13 @@ services:
       - acme:/etc/acme.sh
     environment:
       - DEFAULT_EMAIL=${mail}
-      - TZ=America/Santiago
+      - "TZ=America/Santiago"
 
   duckdns:
     image: linuxserver/duckdns:version-1c126a78
     container_name: duckdns
     environment:
-      - TZ=America/Santiago
+      - "TZ=America/Santiago"
       #Cambiarlo para activar subdominio por DuckDNS
       - "SUBDOMAINS=${subdominio}"
       #Cambiarlo para activar subdominio por DuckDNS
@@ -56,8 +56,12 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - TZ=America/Santiago
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "TZ=America/Santiago"
+      #- "LC_ALL=es_CL.UTF-8"
+      #- "LANG=es_CL.UTF-8"
+      #- "LANGUAGE=es_CL.UTF-8"
+      - "LC_TIME=es_CL.UTF-8"
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
@@ -88,7 +92,11 @@ services:
       - "ASPNETCORE_URLS=http://+:80"
       #Conexion BBDD
       - "ConnectionStrings:DefaultConnection=${stringconexion}"
-      - TZ=America/Santiago
+      - "TZ=America/Santiago"
+      #- "LC_ALL=es_CL.UTF-8"
+      #- "LANG=es_CL.UTF-8"
+      #- "LANGUAGE=es_CL.UTF-8"
+      - "LC_TIME=es_CL.UTF-8"
 
 #Visor de BD MySQL - Pesa 500MB, utilizar workbench
 #  phpmyadmin:
