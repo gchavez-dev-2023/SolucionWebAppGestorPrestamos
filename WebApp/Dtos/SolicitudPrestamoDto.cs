@@ -6,13 +6,14 @@ namespace WebApp.Dtos
 {
     public class SolicitudPrestamoDto
     {
+        [DisplayName("Solicitud")]
         public int Id { get; set; }
 
-        [DisplayName("Clientes")]
+        [DisplayName("Cedula Identidad Cliente")]
         public int ClienteId { get; set; }
         public ClienteDto? ClienteDto { get; set; }
 
-        [DisplayName("Productos")]
+        [DisplayName("Nombre Producto")]
         public int ProductoId { get; set; }
         public ProductoDto? ProductoDto { get; set; }
 
@@ -27,7 +28,7 @@ namespace WebApp.Dtos
 
         [Required(ErrorMessage = "Debe ingresar cantidad, valores permitidos entre 0 y 600")]
         [Range(0, 600)]
-        [DisplayName("Plazo Minimo")]
+        [DisplayName("Cantidad Cuotas")]
         public int CantidadCuotas { get; set; }
 
         [Required]

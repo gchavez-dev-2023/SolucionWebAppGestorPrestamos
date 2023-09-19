@@ -1,0 +1,51 @@
+﻿@model WebApp.Dtos.PagoDto
+
+@{
+    ViewData["Title"] = "Detalle Pago Cuota";
+}
+
+<h1>Detalle</h1>
+
+<div>
+    <h4>Pago Cuota</h4>
+    <hr />
+
+    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+        <a asp-action="CuotaPagosIndex" class="btn btn-secondary" asp-route-id="@Model.CuotaId">Volver</a>
+        <a asp-action="CuotaPagoEdit" class="btn btn-primary" asp-route-id="@Model.Id">Editar</a>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NumeroCuota)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumeroCuota)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaPagoDisplay)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaPagoDisplay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MontoPagoDisplay)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MontoPagoDisplay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FormaPagoDescripcion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FormaPagoDescripcion)
+        </dd>
+        @*<dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PersonaId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PersonaId)
+        </dd>*@
+    </dl>
+
+</div>

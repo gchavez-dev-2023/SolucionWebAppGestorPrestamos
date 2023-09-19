@@ -1,0 +1,84 @@
+﻿@using System.Globalization;
+@model IEnumerable<WebApp.Dtos.SolicitudPrestamoDto>
+
+@{
+    ViewData["Title"] = "Lista de Solicitud Prestamos";
+}
+
+<h1>Lista de Solicitud Prestamos</h1>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClienteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoSolicitado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CantidadCuotas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValorCuota)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostoTotalFinanciero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaSolicitud)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClienteDto.CedulaIdentidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductoDto.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontoSolicitadoDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CantidadCuotas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ValorCuotaDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CostoTotalFinancieroPercent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaSolicitudDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td id="@item.ClienteDto.CedulaIdentidad@item.ProductoDto.Descripcion@item.FechaSolicitud">
+                    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                        <a asp-action="Aprove" class="btn btn-success text-white" asp-route-id="@item.Id">Aprobar</a>
+                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>
+                        <a asp-action="Reject" class="btn btn-danger" asp-route-id="@item.Id">Rechazar</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

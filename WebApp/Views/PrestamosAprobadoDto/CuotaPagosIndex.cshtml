@@ -1,0 +1,53 @@
+﻿@using System.Globalization;
+@model IEnumerable<WebApp.Dtos.PagoDto>
+
+@{
+    ViewData["Title"] = $"Lista de Pagos - Prestamo {@ViewBag.PrestamosAprobadoId} - Cuota {@ViewBag.NumeroCuota}";
+}
+
+<h1>Lista de Pagos - Prestamo @ViewBag.PrestamosAprobadoId - Cuota @ViewBag.NumeroCuota </h1>
+
+<div class="btn-group" role="group" aria-label="Agrupar Botones">
+    <a asp-action="CuotasIndex" class="btn btn-secondary" asp-route-id="@ViewBag.PrestamosAprobadoId">Volver</a>
+    <a asp-action="CuotaPagoCreate" class="btn btn-success text-white" asp-route-id="@ViewBag.CuotaId">Nuevo Pago</a>
+</div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            @*<th>
+                @Html.DisplayNameFor(model => model.NumeroCuota)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.FechaPagoDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoPagoDisplay)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.NumeroCuota)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaPagoDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontoPagoDisplay)
+                </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                        <a asp-action="CuotaPagoEdit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>
+                        <a asp-action="CuotaPagoDetails" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>
+                        <a asp-action="CuotaPagoDelete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

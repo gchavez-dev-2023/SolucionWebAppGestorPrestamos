@@ -23,6 +23,7 @@ namespace WebApp.Data
         public virtual DbSet<OrigenIngresoCliente> OrigenesIngresoCliente { get; set; } = null!;
         public virtual DbSet<Nacionalidad> Nacionalidades { get; set; } = null!;
         public virtual DbSet<Pago> Pagos { get; set; } = null!;
+        public virtual DbSet<CuotaPago> CuotasPagos { get; set; } = null!;
         public virtual DbSet<Persona> Personas { get; set; } = null!;
         public virtual DbSet<PrestamoAprobado> PrestamosAprobado { get; set; } = null!;
         public virtual DbSet<Producto> Productos { get; set; } = null!;

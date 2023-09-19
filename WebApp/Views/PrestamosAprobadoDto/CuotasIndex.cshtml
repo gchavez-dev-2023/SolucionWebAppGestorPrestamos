@@ -1,0 +1,75 @@
+﻿@using System.Globalization;
+@model IEnumerable<WebApp.Dtos.CuotaDto>
+
+@{
+    ViewData["Title"] = $"Lista de Cuotas - Prestamo {@Model.FirstOrDefault().PrestamoAprobadoId}";
+}
+
+<h1>Lista de Cuotas - Prestamo @Model.FirstOrDefault().PrestamoAprobadoId</h1>
+
+<div class="btn-group" role="group" aria-label="Agrupar Botones">
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            @*<th>
+                @Html.DisplayNameFor(model => model.PrestamoAprobadoId)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroCuota)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaVencimientoDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoTotalCuotaDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CuotaTotalPagadoDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CuotaTotalDeudaDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.PrestamoAprobadoId)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroCuota)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaVencimientoDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontoTotalCuotaDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CuotaTotalPagadoDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CuotaTotalDeudaDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                        <a asp-action="CuotaPagosIndex" class="btn btn-success text-white" asp-route-id="@item.Id">Pagos</a>
+                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -25,7 +25,7 @@ namespace WebApp.Controllers
         // GET: Pagos
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Pagos.Include(p => p.Cuota).Include(p => p.FormaPago).Include(p => p.Persona);
+            var applicationDbContext = _context.Pagos.Include(p => p.PrestamoAprobado).Include(p => p.FormaPago).Include(p => p.Persona);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -38,7 +38,7 @@ namespace WebApp.Controllers
             }
 
             var pago = await _context.Pagos
-                .Include(p => p.Cuota)
+                .Include(p => p.PrestamoAprobado)
                 .Include(p => p.FormaPago)
                 .Include(p => p.Persona)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -53,7 +53,7 @@ namespace WebApp.Controllers
         // GET: Pagos/Create
         public IActionResult Create()
         {
-            ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id");
+            ViewData["PrestamoAprobadoId"] = new SelectList(_context.PrestamosAprobado, "Id", "Id");
             ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion");
             ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad");
             return View();
@@ -64,7 +64,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CuotaId,FechaPago,MontoPago,FormaPagoId,PersonaId,UrlDocumento")] Pago pago)
+        public async Task<IActionResult> Create([Bind("Id,PrestamoAprobadoId,FechaPago,MontoPago,FormaPagoId,PersonaId,UrlDocumento")] Pago pago)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id", pago.CuotaId);
+            ViewData["PrestamoAprobadoId"] = new SelectList(_context.PrestamosAprobado, "Id", "Id");
             ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion", pago.FormaPagoId);
             ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", pago.PersonaId);
             return View(pago);
@@ -91,7 +91,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id", pago.CuotaId);
+            ViewData["PrestamoAprobadoId"] = new SelectList(_context.PrestamosAprobado, "Id", "Id");
             ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion", pago.FormaPagoId);
             ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", pago.PersonaId);
             return View(pago);
@@ -102,7 +102,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CuotaId,FechaPago,MontoPago,FormaPagoId,PersonaId,UrlDocumento")] Pago pago)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PrestamoAprobadoId,FechaPago,MontoPago,FormaPagoId,PersonaId,UrlDocumento")] Pago pago)
         {
             if (id != pago.Id)
             {
@@ -129,7 +129,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CuotaId"] = new SelectList(_context.Cuotas, "Id", "Id", pago.CuotaId);
+            ViewData["PrestamoAprobadoId"] = new SelectList(_context.PrestamosAprobado, "Id", "Id");
             ViewData["FormaPagoId"] = new SelectList(_context.FormasPago, "Id", "Descripcion", pago.FormaPagoId);
             ViewData["PersonaId"] = new SelectList(_context.Personas, "Id", "CedulaIdentidad", pago.PersonaId);
             return View(pago);
@@ -144,7 +144,7 @@ namespace WebApp.Controllers
             }
 
             var pago = await _context.Pagos
-                .Include(p => p.Cuota)
+                .Include(p => p.PrestamoAprobado)
                 .Include(p => p.FormaPago)
                 .Include(p => p.Persona)
                 .FirstOrDefaultAsync(m => m.Id == id);

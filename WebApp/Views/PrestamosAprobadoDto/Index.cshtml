@@ -1,0 +1,89 @@
+﻿@using System.Globalization;
+@model IEnumerable<WebApp.Dtos.PrestamoAprobadoDto>
+
+@{
+    ViewData["Title"] = "Lista de Prestamos Aprobado";
+}
+
+<h1>Lista de Prestamos Aprobado</h1>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClienteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoAprobadoDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CantidadCuotas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrestamoTotalDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrestamoTotalPagadoDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrestamoTotalDeudaDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaAprobacionDisplay)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClienteDto.CedulaIdentidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductoDto.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontoAprobadoDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CantidadCuotas)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrestamoTotalDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrestamoTotalPagadoDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrestamoTotalDeudaDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaAprobacionDisplay)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>*@
+                <td id="@item.ClienteDto.CedulaIdentidad@item.ProductoDto.Descripcion@item.FechaAprobacion">
+                    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                        <a asp-action="CuotasIndex" class="btn btn-primary" asp-route-id="@item.Id">Cuotas</a>
+                        @*<a asp-action="PagosIndex" class="btn btn-danger" asp-route-id="@item.Id">Pagos</a>*@
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

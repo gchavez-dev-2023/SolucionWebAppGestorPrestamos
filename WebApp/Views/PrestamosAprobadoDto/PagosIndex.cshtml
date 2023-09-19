@@ -1,0 +1,55 @@
+﻿@using System.Globalization;
+@model IEnumerable<WebApp.Dtos.PagoDto>
+
+@{
+    ViewData["Title"] = "Lista de Pagos";
+}
+
+<h1>Lista de Pagos</h1>
+
+<div class="btn-group" role="group" aria-label="Agrupar Botones">
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    <a asp-action="PagoCreate" class="btn btn-success text-white" asp-route-id="@ViewBag.PrestamosAprobadoId">Nuevo Pago</a>
+</div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.NumeroCuota)*@
+                @Html.DisplayNameFor(model => model.PrestamoAprobadoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaPagoDisplay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoPagoDisplay)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.NumeroCuota)*@
+                    @Html.DisplayFor(modelItem => item.PrestamoAprobadoId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaPagoDisplay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontoPagoDisplay)
+                </td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Agrupar Botones">
+                        <a asp-action="PagoEdit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>
+                        <a asp-action="PagoDetails" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>
+                        <a asp-action="PagoDelete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
