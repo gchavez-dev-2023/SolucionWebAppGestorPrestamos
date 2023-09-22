@@ -15,10 +15,13 @@
     <thead class="thead-dark">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Cliente.Persona.CedulaIdentidad)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Producto.Descripcion)
+                @Html.DisplayNameFor(model => model.ClienteId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductoId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.MontoSolicitado)
@@ -46,14 +49,15 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Cliente.Persona.CedulaIdentidad)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Producto.Descripcion)
                 </td>
                 <td>
-                    @*@String.Format(CultureInfo.GetCultureInfo("es-AR"), "{0:C}", item.MontoSolicitado)*@
-                    @*@String.Format("${0:C2}",item.MontoSolicitado)*@
                     @Html.DisplayFor(modelItem => item.MontoSolicitadoDisplay)
                 </td>
                 <td>
@@ -66,7 +70,6 @@
                     @Html.DisplayFor(modelItem => item.CostoTotalFinancieroPercent)
                 </td>
                 <td>
-                    @*@String.Format("{0:dd/MM/yyyy hh:mm:ss}",item.FechaSolicitud)*@
                     @Html.DisplayFor(modelItem => item.FechaSolicitudDisplay)
                 </td>
                 <td>

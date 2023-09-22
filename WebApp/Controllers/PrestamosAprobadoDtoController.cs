@@ -10,7 +10,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Roles = "SUPERUSER,ADMINISTRADOR,GERENTE")]
+    [Authorize(Roles = "SUPERUSER,ADMINISTRADOR,GERENTE,COLABORADOR")]
     public class PrestamosAprobadoDtoController : Controller
     {
         private readonly ApplicationDbContext _context;

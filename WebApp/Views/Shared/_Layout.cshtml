@@ -85,6 +85,7 @@
                                 <ul class="dropdown-menu">
                                     <a class="dropdown-item" asp-area="" asp-controller="SolicitudesAprobarDto" asp-action="Index">Solicitudes - Aprobar DTO</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="PrestamosAprobadoDto" asp-action="Index">Prestamos Aprobados - Cuotas DTO</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Informes" asp-action="Index">Informes</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="PrestamosAprobado" asp-action="Index">Prestamos Aprobado</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Cuotas" asp-action="Index">Cuotas</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Pagos" asp-action="Index">Pagos</a>
@@ -98,22 +99,37 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Usuarios</a>
                             </li>
                         }
-                        @if ( User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE") || User.IsInRole("COLABORADOR"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ClientesDto" asp-action="Index">Clientes</a>
-                            </li>
-                        }
                         @if (User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ProductosDto" asp-action="Index">Productos</a>
                             </li>
                         }
+                        @if ( User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE") || User.IsInRole("COLABORADOR"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ClientesDto" asp-action="Index">Clientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="SolicitudesPrestamoDto" asp-action="Index">Solicitudes</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="SolicitudesAprobarDto" asp-action="Index">Aprobar Solicitud</a>
+                            </li>
+                        }
                         @if (User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE") || User.IsInRole("COLABORADOR"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="SolicitudesPrestamoDto" asp-action="Index">Solicitudes Prestamo</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="PrestamosAprobadoDto" asp-action="Index">Pagos Cuota</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("ADMINISTRADOR") || User.IsInRole("GERENTE"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Informes" asp-action="Index">Informes</a>
                             </li>
                         }
                     </ul>
@@ -167,6 +183,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/notify.min.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

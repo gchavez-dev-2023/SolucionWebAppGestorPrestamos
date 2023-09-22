@@ -16,8 +16,12 @@ namespace WebApp.Models
             PrestamosAprobados = new HashSet<PrestamoAprobado>();
         }
 
+        [DisplayName("Solicitud")]
         public int Id { get; set; }
+        [DisplayName("Cedula Identidad Cliente")]
         public int ClienteId { get; set; }
+
+        [DisplayName("Nombre Producto")]
         public int ProductoId { get; set; }
 
         [Required(ErrorMessage = "Debe ingresar monto, valores permitidos entre 10.000,00 y 100.000.000,00")]

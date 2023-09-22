@@ -1,0 +1,174 @@
+﻿@{
+    ViewData["Title"] = "Informes";
+}
+
+<h1>Informes</h1>
+
+<div class="row mt-2">
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">Prestamos Aprobados por Fechas</div>
+            <div class="card-body">
+                <canvas id="charVentasXFecha" style="max-height:250px"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">Prestamos Aprobados por Productos</div>
+            <div class="card-body">
+                <canvas id="charVentasXProducto" style="max-height:250px"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">Pagos por Prestamo</div>
+            <div class="card-body">
+                <canvas id="charPagosXPrestamo" style="max-height:250px"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(() => {
+            renderPrestamosAprobadosXFecha();
+            renderPrestamosAprobadosXProducto();
+            renderPagosXPrestamo();
+        });
+
+        function renderPrestamosAprobadosXFecha() {
+            $.ajax({
+                type: "POST",
+                url: "/Informes/PrestamosAprobadosXFecha",
+                dataType: 'json',
+                //data: { "productoId": $("#ProductoId").val()
+                //    , "montoSolicitado": $("#MontoSolicitado").val()
+                //    , "cantidadCuotas": $("#CantidadCuotas").val() 
+                //},
+                success: function (response) {
+                    //$("#CostoTotalFinanciero").val(response.costoTotalFinanciero);
+                    //$("#ValorCuotaDisplay").val(response.valorCuotaDisplay);
+                    const ctx = document.getElementById('charVentasXFecha');
+
+                    const labels = response.map((item) => { return item.fechaAprobacion});
+                    const values = response.map((item) => { return item.cantidad});
+
+                    //console.log(response);
+                    //console.log(labels);
+                    //console.log(values);
+
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '# Cantidad Prestamos Aprobados por Fecha',
+                                data: values,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                failure: function (response) {
+                    lert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+
+        function renderPrestamosAprobadosXProducto() {
+            $.ajax({
+                type: "POST",
+                url: "/Informes/PrestamosAprobadosXProducto",
+                dataType: 'json',
+                success: function (response) {
+                    const ctx = document.getElementById('charVentasXProducto');
+
+                    const labels = response.map((item) => { return item.nombre });
+                    const values = response.map((item) => { return item.cantidad });
+
+                    console.log(response);
+                    console.log(labels);
+                    console.log(values);
+
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '# Cantidad Prestamos Aprobados por Producto',
+                                data: values,
+                                hoverOffset: 4
+                            }]
+                        }
+                    });
+                },
+                failure: function (response) {
+                    lert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+
+        function renderPagosXPrestamo() {
+            $.ajax({
+                type: "POST",
+                url: "/Informes/PagosXPrestamo",
+                dataType: 'json',
+                success: function (response) {
+                    const ctx = document.getElementById('charPagosXPrestamo');
+
+                    const labels = response.map((item) => { return item.fechaPago });
+                    const values = response.map((item) => { return item.cantidad });
+
+                    console.log(response);
+                    console.log(labels);
+                    console.log(values);
+
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '# Cantidad Pagos por Prestamo',
+                                data: values,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                failure: function (response) {
+                    lert("failure " + response.responseText);
+                },
+                error: function (response) {
+                    alert("error " + response.responseText);
+                }
+            });
+        }
+    </script>
+}
