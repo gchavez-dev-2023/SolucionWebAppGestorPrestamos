@@ -25,19 +25,20 @@ namespace WebApp.Controllers
         // GET: SolicitudesPrestamo
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = await _context.SolicitudesPrestamo
+            var solicitudesPrestamo = await _context.SolicitudesPrestamo
                 .Include(s => s.Cliente)
                 .Include(s => s.Producto)
                 .Where(x => x.Estado == "Analisis")
-                .OrderByDescending(s => s.Id).ToListAsync();
+                .OrderByDescending(s => s.Id)
+                .ToListAsync();
 
-            foreach (var item in applicationDbContext)
-            {
-                item.Cliente.Persona = await _context.Personas.FirstOrDefaultAsync(x => x.Id == item.Cliente.PersonaId);
-            }
+            var solicitudesPrestamoDto = new List<SolicitudPrestamoDto>();
 
-            return View( applicationDbContext);
+            await SolicitudesPrestamoModeltoDto(solicitudesPrestamo, solicitudesPrestamoDto);
+
+            return View(solicitudesPrestamoDto);
         }
+
 
         // GET: SolicitudesPrestamo/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -125,7 +126,7 @@ namespace WebApp.Controllers
             ViewData["ClienteId"] = new SelectList(_context.Clientes.Include(c => c.Persona), "Id", "Persona.CedulaIdentidad", solicitudPrestamoDto.ClienteId);
             ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", solicitudPrestamoDto.ProductoId);
 
-            solicitudPrestamoDto.FechaSolicitud = DateTime.Today;
+            solicitudPrestamoDto.FechaSolicitud = DateTime.Now;
 
             if (solicitudPrestamoDto.ProductoDto.EdadMinima > solicitudPrestamoDto.ClienteDto.Edad ||
                 solicitudPrestamoDto.ProductoDto.EdadMaxima < solicitudPrestamoDto.ClienteDto.Edad)
@@ -631,6 +632,40 @@ namespace WebApp.Controllers
         private bool SolicitudPrestamoExists(int id)
         {
             return (_context.SolicitudesPrestamo?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private async Task SolicitudesPrestamoModeltoDto(List<SolicitudPrestamo>? solicitudesPrestamo, List<SolicitudPrestamoDto> solicitudesPrestamoDto)
+        {
+            foreach (var solicitudPrestamo in solicitudesPrestamo)
+            {
+                var solicitudPrestamoDto = new SolicitudPrestamoDto();
+
+                //ClienteDto
+                solicitudPrestamoDto.ClienteId = solicitudPrestamo.Cliente.Id;
+                var clienteDto = new ClienteDto();
+                clienteDto.Id = solicitudPrestamo.Cliente.Id;
+                clienteDto.PersonaId = solicitudPrestamo.Cliente.PersonaId;
+                var persona = await _context.Personas.FirstOrDefaultAsync(x => x.Id == solicitudPrestamo.Cliente.PersonaId);
+                clienteDto.CedulaIdentidad = persona.CedulaIdentidad;
+                solicitudPrestamoDto.ClienteDto = clienteDto;
+                //ProductoDto
+                solicitudPrestamoDto.ProductoId = solicitudPrestamo.Producto.Id;
+                var productoDto = new ProductoDto();
+                productoDto.Id = solicitudPrestamo.ProductoId;
+                productoDto.Descripcion = solicitudPrestamo.Producto.Descripcion;
+                solicitudPrestamoDto.ProductoDto = productoDto;
+                //
+                solicitudPrestamoDto.Id = solicitudPrestamo.Id;
+                solicitudPrestamoDto.MontoSolicitado = solicitudPrestamo.MontoSolicitado;
+                solicitudPrestamoDto.CantidadCuotas = solicitudPrestamo.CantidadCuotas;
+                solicitudPrestamoDto.ValorCuota = solicitudPrestamo.ValorCuota;
+                solicitudPrestamoDto.CostoTotalFinanciero = solicitudPrestamo.CostoTotalFinanciero;
+                solicitudPrestamoDto.TasaCoberturaDeudaConyuge = solicitudPrestamo.TasaCoberturaDeudaConyuge;
+                solicitudPrestamoDto.FechaSolicitud = solicitudPrestamo.FechaSolicitud;
+                solicitudPrestamoDto.UrlDocumento = solicitudPrestamo.UrlDocumento;
+                solicitudPrestamoDto.Estado = solicitudPrestamo.Estado;
+                solicitudesPrestamoDto.Add(solicitudPrestamoDto);
+            }
         }
 
         private static void SolicitudPrestamoModelToDto(SolicitudPrestamo? solicitudPrestamo, SolicitudPrestamoDto solicitudPrestamoDto, Cliente? cliente, Persona? personaConyuge, Producto? producto)

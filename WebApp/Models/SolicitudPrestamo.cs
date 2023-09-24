@@ -55,7 +55,7 @@ namespace WebApp.Models
         [DataType(DataType.DateTime)]
         public DateTime FechaSolicitud { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
         [DisplayName("Fecha de Solicitud")]
         public virtual DateTime FechaSolicitudDisplay { get { return FechaSolicitud; } }
         public string UrlDocumento { get; set; } = null!;

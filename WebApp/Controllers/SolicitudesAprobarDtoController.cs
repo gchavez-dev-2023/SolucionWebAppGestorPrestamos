@@ -420,8 +420,8 @@ namespace WebApp.Controllers
             prestamoAprobado.MontoGastosContratacion = (producto.Terminos.TasaGastosAdministrativos * solicitudPrestamo.MontoSolicitado) / 100;
             prestamoAprobado.MontoGastosMantencion = ((producto.Terminos.TasaGastosCobranza * solicitudPrestamo.MontoSolicitado) / 100) * solicitudPrestamo.CantidadCuotas;
             prestamoAprobado.MontoSeguros = ((producto.Terminos.TasaGastosCobranza * solicitudPrestamo.MontoSolicitado) / 100) * solicitudPrestamo.CantidadCuotas;
-            prestamoAprobado.FechaAprobacion = DateTime.Today;
-            prestamoAprobado.FechaDesembolso = DateTime.Today;
+            prestamoAprobado.FechaAprobacion = DateTime.Now;
+            prestamoAprobado.FechaDesembolso = DateTime.Now;
             prestamoAprobado.FechaPrimerVencimiento = DateTime.Today.AddMonths(1);
             prestamoAprobado.UrlDocumento = "-";
             prestamoAprobado.Estado = "Aprobado";

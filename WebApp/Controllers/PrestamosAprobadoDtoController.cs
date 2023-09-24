@@ -525,7 +525,7 @@ namespace WebApp.Controllers
         private static void PagoDtoToModel(PagoDto pagoDto, Pago pago)
         {
             pago.PrestamoAprobadoId = pagoDto.PrestamoAprobadoId;
-            pago.FechaPago = DateTime.Today;
+            pago.FechaPago = DateTime.Now;
             pago.MontoPago = pagoDto.MontoPago;
             pago.FormaPagoId = pagoDto.FormaPagoId;
             pago.PersonaId = pagoDto.PersonaId;

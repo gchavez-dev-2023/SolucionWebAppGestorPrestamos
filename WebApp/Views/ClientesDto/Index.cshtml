@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.Models.Cliente>
+﻿@model IEnumerable<WebApp.Dtos.ClienteDto>
 
 @{
     ViewData["Title"] = "Lista de Clientes";
@@ -14,22 +14,22 @@
     <thead class="thead-dark">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Persona.CedulaIdentidad)
+                @Html.DisplayNameFor(model => model.CedulaIdentidad)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Persona.Apellido)
+                @Html.DisplayNameFor(model => model.Apellido)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Persona.Nombre)
+                @Html.DisplayNameFor(model => model.Nombre)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.EstadoCivilId)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Scoring)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Persona.DatosVerificados)
+                @Html.DisplayNameFor(model => model.DatosVerificados)
             </th>
             <th></th>
         </tr>
@@ -39,24 +39,24 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Persona.CedulaIdentidad)
+                    @Html.DisplayFor(modelItem => item.CedulaIdentidad)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Persona.Apellido)
+                    @Html.DisplayFor(modelItem => item.Apellido)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Persona.Nombre)
+                    @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EstadoCivil.Descripcion)
-                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Scoring)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Persona.DatosVerificados)
+                    @Html.DisplayFor(modelItem => item.DatosVerificados)
                 </td>
-                <td id="@item.Persona.CedulaIdentidad">
+                <td id="@item.CedulaIdentidad">
                     <div class="btn-group" role="group" aria-label="Agrupar Botones">
                         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>
                         <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>

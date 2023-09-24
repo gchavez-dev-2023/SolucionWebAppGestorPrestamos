@@ -24,8 +24,17 @@ namespace WebApp.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Clientes.Include(c => c.EstadoCivil).Include(c => c.Persona).OrderByDescending(s => s.Id);
-            return View(await applicationDbContext.ToListAsync());
+            var clientes = await _context.Clientes
+                .Include(c => c.EstadoCivil)
+                .Include(c => c.Persona)
+                .OrderByDescending(s => s.Id)
+                .ToListAsync();
+
+            var clientesDto = new List<ClienteDto>();
+
+            ClientesModelToDto(clientes, clientesDto);
+
+            return View(clientesDto);
         }
 
         // GET: Clientes/Details/5
@@ -614,6 +623,45 @@ namespace WebApp.Controllers
             conyuge.ClienteId = cliente.Id;
             conyuge.UrlDocumento = "-";
         }
+
+        private static void ClientesModelToDto(List<Cliente>? clientes, List<ClienteDto> clientesDto)
+        {
+            foreach (var cliente in clientes)
+            {
+                var clienteDto = new ClienteDto();
+
+                clienteDto.Id = cliente.Id;
+                clienteDto.DomicilioAlternativo = cliente.DomicilioAlternativo;
+                clienteDto.TelefonoLaboral = cliente.TelefonoLaboral;
+                clienteDto.PersonaPoliticamenteExpuesta = cliente.PersonaPoliticamenteExpuesta;
+                clienteDto.EstadoCivilId = cliente.EstadoCivilId;
+                clienteDto.Scoring = cliente.Scoring;
+                //PersonaCliente
+                clienteDto.PersonaId = cliente.Persona.Id;
+                clienteDto.CedulaIdentidad = cliente.Persona.CedulaIdentidad;
+                clienteDto.Nombre = cliente.Persona.Nombre;
+                clienteDto.Apellido = cliente.Persona.Apellido;
+                clienteDto.FechaNacimiento = cliente.Persona.FechaNacimiento;
+                clienteDto.GeneroId = cliente.Persona.GeneroId;
+                clienteDto.Domicilio = cliente.Persona.Domicilio;
+                clienteDto.CorreoElectronico = cliente.Persona.CorreoElectronico;
+                clienteDto.Telefono = cliente.Persona.Telefono;
+                clienteDto.NacionalidadId = cliente.Persona.NacionalidadId;
+                clienteDto.DatosVerificados = cliente.Persona.DatosVerificados;
+                //OrigenIngresoCliente
+                var origenIngresoCliente = cliente.OrigenesIngresoClientes.FirstOrDefault();
+                if (origenIngresoCliente != null)
+                {
+                    clienteDto.OrigenIngresoId = origenIngresoCliente.Id;
+                    clienteDto.TipoActividadId = origenIngresoCliente.TipoActividadId;
+                    clienteDto.FechaInicioActividad = origenIngresoCliente.FechaInicioActividad;
+                    clienteDto.FechaFinActividad = origenIngresoCliente.FechaFinActividad;
+                    clienteDto.MontoLiquidoPercibido = origenIngresoCliente.MontoLiquidoPercibido;
+                }
+                clientesDto.Add(clienteDto);
+            }
+        }
+
 
         private static void ClienteModelToDto(Cliente? cliente, ClienteDto clienteDto, Persona? personaConyuge)
         {

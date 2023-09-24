@@ -22,8 +22,17 @@ namespace WebApp.Controllers
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Productos.Include(p => p.Beneficios).Include(p => p.Requisitos).Include(p => p.Terminos).OrderByDescending(s => s.Id);
-            return View(await applicationDbContext.ToListAsync());
+            var productos = await _context.Productos
+                .Include(p => p.Beneficios)
+                .Include(p => p.Requisitos)
+                .Include(p => p.Terminos)
+                .OrderByDescending(s => s.Id)
+                .ToListAsync();
+            var productosDto = new List<ProductoDto>();
+
+            ProductosModelToDto(productos, productosDto);
+
+            return View(productosDto);
         }
 
         // GET: Productos/Details/5
@@ -334,6 +343,45 @@ namespace WebApp.Controllers
         private bool ProductoExists(int id)
         {
             return (_context.Productos?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private static void ProductosModelToDto(List<Producto>? productos, List<ProductoDto> productosDto)
+        {
+            foreach (var producto in productos)
+            {
+                var productoDto = new ProductoDto();
+
+                productoDto.Id = producto.Id;
+                productoDto.Descripcion = producto.Descripcion;
+                productoDto.RequisitosId = producto.RequisitosId;
+                productoDto.EdadMinima = producto.Requisitos.EdadMinima;
+                productoDto.EdadMaxima = producto.Requisitos.EdadMaxima;
+                productoDto.ScoringMinimo = producto.Requisitos.ScoringMinimo;
+                productoDto.CantidadAvales = producto.Requisitos.CantidadAvales;
+                productoDto.CantidadRecibosSueldo = producto.Requisitos.CantidadRecibosSueldo;
+                productoDto.BeneficiosId = producto.BeneficiosId;
+                productoDto.Aprobacion24Horas = producto.Beneficios.Aprobacion24Horas;
+                productoDto.SolicitudEnLinea = producto.Beneficios.SolicitudEnLinea;
+                productoDto.TerminosId = producto.TerminosId;
+                productoDto.MontoMinimo = producto.Terminos.MontoMinimo;
+                productoDto.MontoMaximo = producto.Terminos.MontoMaximo;
+                productoDto.PlazoMinimo = producto.Terminos.PlazoMinimo;
+                productoDto.PlazoMaximo = producto.Terminos.PlazoMaximo;
+                productoDto.TasaNominal = producto.Terminos.TasaNominal;
+                productoDto.TasaGastosAdministrativos = producto.Terminos.TasaGastosAdministrativos;
+                productoDto.TasaGastosCobranza = producto.Terminos.TasaGastosCobranza;
+                productoDto.TasaSeguros = producto.Terminos.TasaSeguros;
+                productoDto.TasaInteresMora = producto.Terminos.TasaInteresMora;
+                productoDto.EsPrepagable = producto.Terminos.EsPrepagable;
+                productoDto.TasaCastigoPrepago = producto.Terminos.TasaCastigoPrepago;
+                productoDto.TasaCoberturaAval = producto.Terminos.TasaCoberturaAval;
+                productoDto.TasaCoberturaConyuge = producto.Terminos.TasaCoberturaConyuge;
+                productoDto.FechaInicioVigencia = producto.FechaInicioVigencia;
+                productoDto.FechaFinVigencia = producto.FechaFinVigencia;
+
+                productosDto.Add(productoDto);
+            }
+
         }
 
         private static void ProductoModelToDto(Producto? producto, ProductoDto productoDto)

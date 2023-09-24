@@ -1,5 +1,5 @@
 ﻿@using System.Globalization;
-@model IEnumerable<WebApp.Models.SolicitudPrestamo>
+@model IEnumerable<WebApp.Dtos.SolicitudPrestamoDto>
 
 @{
     ViewData["Title"] = "Lista de Solicitud Prestamos";
@@ -52,10 +52,10 @@
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Cliente.Persona.CedulaIdentidad)
+                    @Html.DisplayFor(modelItem => item.ClienteDto.CedulaIdentidad)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Producto.Descripcion)
+                    @Html.DisplayFor(modelItem => item.ProductoDto.Descripcion)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.MontoSolicitadoDisplay)
@@ -75,7 +75,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Estado)
                 </td>
-                <td id="@item.Cliente.Persona.CedulaIdentidad@item.Producto.Descripcion@item.FechaSolicitud">
+                <td id="@item.ClienteDto.CedulaIdentidad@item.ProductoDto.Descripcion@item.FechaSolicitud">
                     <div class="btn-group" role="group" aria-label="Agrupar Botones">
                         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Editar</a>
                         <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalle</a>

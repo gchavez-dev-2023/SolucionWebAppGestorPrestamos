@@ -61,13 +61,13 @@ namespace WebApp.Dtos
 
         [DisplayName("Fecha de Aprobacion")]
         public DateTime FechaAprobacion { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
         [DisplayName("Fecha de Aprobacion")]
         public virtual DateTime FechaAprobacionDisplay { get { return FechaAprobacion; } }
 
         [DisplayName("Fecha Desembolso")]
         public DateTime FechaDesembolso { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
         [DisplayName("Fecha Desembolso")]
         public virtual DateTime FechaDesembolsonDisplay { get { return FechaDesembolso; } }
 

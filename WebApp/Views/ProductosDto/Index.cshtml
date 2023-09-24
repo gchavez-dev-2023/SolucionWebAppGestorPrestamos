@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.Models.Producto>
+﻿@model IEnumerable<WebApp.Dtos.ProductoDto>
 
 @{
     ViewData["Title"] = "Lista de Productos Financieros";
@@ -23,13 +23,13 @@
                 @Html.DisplayNameFor(model => model.FechaFinVigencia)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Beneficios.SolicitudEnLinea)
+                @Html.DisplayNameFor(model => model.SolicitudEnLinea)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Requisitos.ScoringMinimo)
+                @Html.DisplayNameFor(model => model.ScoringMinimo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Terminos.TasaNominal)
+                @Html.DisplayNameFor(model => model.TasaNominal)
             </th>
             <th></th>
         </tr>
@@ -46,17 +46,16 @@
                     @Html.DisplayFor(modelItem => item.FechaInicioVigenciaDisplay)
                 </td>
                 <td>
-                    @*@String.Format("{0:dd/MM/yyyy}",item.FechaFinVigencia)*@
                     @Html.DisplayFor(modelItem => item.FechaFinVigenciaDisplay)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Beneficios.SolicitudEnLinea)
+                    @Html.DisplayFor(modelItem => item.SolicitudEnLinea)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Requisitos.ScoringMinimo)
+                    @Html.DisplayFor(modelItem => item.ScoringMinimo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Terminos.TasaNominalPercent)
+                    @Html.DisplayFor(modelItem => item.TasaNominalPercent)
                 </td>
                 <td id ="@item.Descripcion">
                     <div class="btn-group" role="group" aria-label="Agrupar Botones">

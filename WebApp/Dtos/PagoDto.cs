@@ -20,7 +20,7 @@ namespace WebApp.Dtos
         [DisplayName("Fecha de Pago")]
         public DateTime FechaPago { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
         [DisplayName("Fecha de Pago")]
         public virtual DateTime FechaPagoDisplay { get { return FechaPago; } }
 
